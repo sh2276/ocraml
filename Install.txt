@@ -1,2 +1,2 @@
-1. Install bogue using 'opam install bogue'
-2. Install OWL using 'opam install owl'
+1. Install Bogue and required dependencies using 'opam install bogue'
+2. Install OWL and required dependencies using 'opam install owl'
