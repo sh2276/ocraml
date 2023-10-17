@@ -1,0 +1,2 @@
+1. Install bogue using 'opam install bogue'
+2. Install OWL using 'opam install owl'
