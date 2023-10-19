@@ -1,2 +1,4 @@
 1. Install Bogue and required dependencies using 'opam install bogue'
-2. Install OWL and required dependencies using 'opam install owl'
+  - Follow the instructions on https://github.com/sanette/bogue#installation 
+  - Make sure you have all the prerequisites and follow the instructions for 
+  pinning, upgrading opam, and unpinning if required.
