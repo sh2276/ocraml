@@ -1,5 +1,6 @@
 build:
 	dune build
+	rm -f gui.exe
 	cp _build/default/bin/gui.exe gui.exe
 
 clean:
