@@ -22,8 +22,8 @@ let demo () =
   let image_title = section_title "Image display" in
   let image_t_layout = L.tower ~margins:0 ~align:Draw.Center [ image_title ] in
 
-  (*replace this image with uploaded image from page 1*)
-  let image = W.image ~w:(width / 2) "handwritten_3.png" in
+  (* TODO: replace this image with uploaded image from page 1 *)
+  let image = W.image ~w:(width / 2) "bin/handwritten_3.png" in
   let image_layout = L.tower ~margins:0 [ L.resident image ] in
 
   let slider_title = section_title "Progress bar" in
@@ -112,7 +112,7 @@ let demo () =
       [ ("Upload Image", page1); ("Display Image", page2); ("Results", page3) ]
   in
 
-  let board = Main.make [ c_slider; c_button ] [ tabs ] in
+  let board = Main.of_layouts ~connections:[ c_slider; c_button ] [ tabs ] in
   Main.run board
 
 let () = demo ()
