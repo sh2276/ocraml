@@ -10,6 +10,8 @@ let hline width =
   let style = Style.(empty |> with_bg (color_bg Draw.(transp black))) in
   L.resident (W.box ~w:width ~h:1 ~style ())
 
+type image_num = { mutable num : int }
+
 let demo () =
   let width = 500 in
 
@@ -23,13 +25,20 @@ let demo () =
   let image_t_layout = L.tower ~margins:0 ~align:Draw.Center [ image_title ] in
 
   (* TODO: replace this image with uploaded image from page 1 *)
-  let image = W.image ~w:(width / 2) "bin/handwritten_3.png" in
-  let image_layout = L.tower ~margins:0 [ L.resident image ] in
+  let cur_image = { num = 0 } in
+
+  let get_image =
+    W.image ~w:(width / 2) (Printf.sprintf "uploads/%u.png" cur_image.num)
+  in
+  let image_layout = L.tower_of_w [ get_image ] in
 
   let slider_title = section_title "Progress bar" in
   let slider = W.slider ~kind:Slider.HBar 100 in
   let percent = W.label "    0%" in
-  let set_percent w x = Label.set (W.get_label w) (Printf.sprintf "%u%%" x) in
+  let set_percent w x =
+    Label.set (W.get_label w)
+      (Printf.sprintf "%u%%" x ^ Printf.sprintf "%u" cur_image.num)
+  in
   let action w1 w2 _ =
     let x = Slider.value (W.get_slider w1) in
     set_percent w2 x
@@ -61,6 +70,15 @@ let demo () =
       let rec loop () =
         let x = Slider.value sw in
         if x >= 100 || T.should_exit ev then (
+          cur_image.num <- cur_image.num + 1;
+          L.set_rooms image_layout
+            [
+              L.tower_of_w
+                [
+                  W.image ~w:(width / 2)
+                    (Printf.sprintf "uploads/%u.png" cur_image.num);
+                ];
+            ];
           T.will_exit ev;
           Button.reset bw)
         else (
@@ -76,7 +94,6 @@ let demo () =
   let c_button =
     W.connect ~priority:W.Replace button_start slider start_action T.buttons_up
   in
-
   let buttons_layout =
     L.tower ~margins:0
       [ buttons_title; L.flat_of_w [ button_reset; button_start ] ]
