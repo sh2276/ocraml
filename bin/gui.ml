@@ -129,7 +129,7 @@ let demo () =
       [ ("Upload Image", page1); ("Display Image", page2); ("Results", page3) ]
   in
 
-  let board = Main.of_layouts ~connections:[ c_slider; c_button ] [ tabs ] in
+  let board = Main.make [ c_slider; c_button ] [ tabs ] in
   Main.run board
 
 let () = demo ()

@@ -2,3 +2,5 @@
   - Follow the instructions on https://github.com/sanette/bogue#installation 
   - Make sure you have all the prerequisites and follow the instructions for 
   pinning, upgrading opam, and unpinning if required.
+
+2. To run the program, run `make build`, then `make gui`
