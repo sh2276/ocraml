@@ -7,19 +7,42 @@ let num_cols (mat : t) = Array.length mat.(0)
 
 (* Checks if a matrix has a number of rows equal to the length of a row
    [Vector]. *)
-let mat_vec_dim_ok (mat : t) (vec : Vector.t) =
+let assrt_mv_dim (mat : t) (vec : Vector.t) =
   if num_rows mat <> Vector.length vec then
     invalid_arg "Matrix and vector are not compatible lengths"
 
 (* Checks if a two matricies have the same dimensions. *)
-let mat_mat_dim_ok (m1 : t) (m2 : t) =
+let assert_m_v_dim (m1 : t) (m2 : t) =
   if num_rows m1 <> num_rows m2 || num_cols m1 <> num_cols m2 then
     invalid_arg "Matricies have incompatible dimensions"
 
 (* Multiplies a matrix and a vector. *)
 let mat_vec_prod (mat : t) (vec : Vector.t) =
-  mat_vec_dim_ok mat vec;
+  assrt_mv_dim mat vec;
   Vector.(init (Array.map (fun row -> Vector.init row @ vec) mat))
+
+(* Multiplies two matricies. *)
+let mat_mat_prod (m1 : t) (m2 : t) =
+  assert_m_v_dim m1 m2;
+  let nr1 = num_rows m1 in
+  let nc1 = num_cols m1 in
+  let nc2 = num_cols m2 in
+
+  let prod = Array.make_matrix nr1 nc2 0.0 in
+
+  for i = 0 to nr1 - 1 do
+    for j = 0 to nc2 - 1 do
+      let sum = ref 0.0 in
+      for k = 0 to nc1 - 1 do
+        sum := !sum +. (m1.(i).(k) *. m2.(k).(j))
+      done;
+      prod.(i).(j) <- !sum
+    done
+  done;
+  prod
+
+let ( @ ) m v = mat_vec_prod m v
+let ( * ) m1 m2 = mat_mat_prod m1 m2
 
 (* Transposes the matrix. *)
 let transpose mat =

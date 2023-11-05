@@ -4,37 +4,37 @@ type t
 (** Representation type of [Vector]. *)
 
 val assert_eq_len : t -> t -> unit
-(** Checks if the length of two vectors are the same. *)
+(** Checks if the length of two vectors is the same. *)
 
 val init : float array -> t
-(** Create a vector from an array of floats *)
+(** Initializes a [Vector] from an array of floats. *)
 
 val add : t -> t -> t
-(** Add two vectors element-wise *)
+(** Element-wise addition of two vectors. *)
 
 val ( + ) : t -> t -> t
-(** Add two vectors element-wise (infix) *)
+(** Element-wise addition of two vectors (infix). *)
 
 val sub : t -> t -> t
-(** Subtract two vectors element-wise *)
+(** Element-wise subtraction of two vectors. *)
 
 val ( - ) : t -> t -> t
-(** Subtract two vectors element-wise (infix) *)
+(** Element-wise subtraction of two vectors (infix). *)
 
 val scalar_mult : float -> t -> t
-(** Multiply a vector by a scalar *)
+(** Scalar multiplication of a [Vector] by a scalar. *)
 
 val ( * ) : float -> t -> t
-(** Multiply a vector by a scalar (infix) *)
+(** Scalar multiplication of a [Vector] by a scalar (infix). *)
 
 val dot_prod : t -> t -> float
-(** Compute the dot product of two vectors *)
+(** Compute the dot product of two [Vector]s. *)
 
 val ( @ ) : t -> t -> float
-(** Compute the dot product of two vectors (infix) *)
+(** Compute the dot product of two [Vector]s (infix). *)
 
 val length : t -> int
-(** The length of a vector *)
+(** The length of a [Vector]. *)
 
 val to_array : t -> float array
-(** Convert a vector to an array of floats. *)
+(** Convert a [Vector] to an array of floats. *)
