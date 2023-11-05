@@ -7,23 +7,23 @@ let num_cols (mat : t) = Array.length mat.(0)
 
 (* Checks if a matrix has a number of rows equal to the length of a row
    [Vector]. *)
-let assrt_mv_dim (mat : t) (vec : Vector.t) =
+let assert_m_v_dim (mat : t) (vec : Vector.t) =
   if num_rows mat <> Vector.length vec then
     invalid_arg "Matrix and vector are not compatible lengths"
 
 (* Checks if a two matricies have the same dimensions. *)
-let assert_m_v_dim (m1 : t) (m2 : t) =
+let assert_m_m_dim (m1 : t) (m2 : t) =
   if num_rows m1 <> num_rows m2 || num_cols m1 <> num_cols m2 then
     invalid_arg "Matricies have incompatible dimensions"
 
 (* Multiplies a matrix and a vector. *)
 let mat_vec_prod (mat : t) (vec : Vector.t) =
-  assrt_mv_dim mat vec;
+  assert_m_v_dim mat vec;
   Vector.(init (Array.map (fun row -> Vector.init row @ vec) mat))
 
 (* Multiplies two matricies. *)
 let mat_mat_prod (m1 : t) (m2 : t) =
-  assert_m_v_dim m1 m2;
+  assert_m_m_dim m1 m2;
   let nr1 = num_rows m1 in
   let nc1 = num_cols m1 in
   let nc2 = num_cols m2 in
