@@ -12,3 +12,10 @@ test:
 
 gui:
 	OCAMLRUNPARAM=b dune exec bin/gui.exe
+
+doc:
+	dune build @doc
+
+opendoc: doc
+	@bash opendoc.sh
+
