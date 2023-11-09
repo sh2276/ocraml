@@ -11,7 +11,7 @@ let assert_m_v_dim (mat : t) (vec : Vector.t) =
   if num_rows mat <> Vector.length vec then
     invalid_arg "Matrix and vector are not compatible lengths"
 
-(* Checks if a two matricies have the same dimensions. *)
+(* Checks if a two matrices have the same dimensions. *)
 let assert_m_m_dim (m1 : t) (m2 : t) =
   if num_rows m1 <> num_rows m2 || num_cols m1 <> num_cols m2 then
     invalid_arg "Matricies have incompatible dimensions"
@@ -21,7 +21,7 @@ let mat_vec_prod (mat : t) (vec : Vector.t) =
   assert_m_v_dim mat vec;
   Vector.(init (Array.map (fun row -> Vector.init row @ vec) mat))
 
-(* Multiplies two matricies. *)
+(* Multiplies two matrices. *)
 let mat_mat_prod (m1 : t) (m2 : t) =
   assert_m_m_dim m1 m2;
   let nr1 = num_rows m1 in

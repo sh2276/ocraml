@@ -1,4 +1,4 @@
-(** Module to represent matricies and their related operations. *)
+(** Module to represent matrices and their related operations. *)
 
 type t
 (** Representation type of [Matrix].*)
@@ -7,7 +7,7 @@ val assert_m_v_dim : t -> Vector.t -> unit
 (** Checks if a vector has the same length as the number of rows in a matrix.*)
 
 val assert_m_m_dim : t -> t -> unit
-(** Checks if a two matricies have the same dimensions.*)
+(** Checks if a two matrices have the same dimensions.*)
 
 val init : float array array -> t
 (** Initializes a [Matrix] from a 2D array of floats. *)
