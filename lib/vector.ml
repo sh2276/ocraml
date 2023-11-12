@@ -5,8 +5,8 @@ let assert_eq_len v1 v2 =
   if Array.length v1 <> Array.length v2 then
     invalid_arg "Vectors must have the same length"
 
-(* Initalizes a vector from a float list.*)
-let init lst = lst
+(* Initalizes a vector from a float array.*)
+let init (lst: float array) = lst
 
 (*Adds two vectors of the same length.*)
 let add (v1 : t) (v2 : t) =
@@ -22,7 +22,7 @@ let sub (v1 : t) (v2 : t) =
 let scalar_mult (s : float) (v : t) = Array.map (fun a -> a *. s) v
 
 (*Computes the dot prodcut of two vectors.*)
-let dot_prod (v1 : t) (v2 : t) =
+let dot_prod (v1 : t) (v2 : t) : float =
   assert_eq_len v1 v2;
   let prod = Array.mapi (fun i x -> x *. v2.(i)) v1 in
   Array.fold_left ( +. ) 0.0 prod
