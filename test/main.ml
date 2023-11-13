@@ -6,9 +6,9 @@
     representing matrices, vectors, and other modules built for loading in data
     and processing images.
 
-    Math modules will be tested manually. (UPDATE THIS) Test cases for math
+    Math modules will be tested manually. Test cases for math
     modules will be developed using both glass and black-box testing, as well as
-    some randomized testing.
+    some randomized testing. 
 
     This testing approach demonstrates the correctness of the system, as it
     ensures that some untestable features of our system that depend on core,
@@ -79,15 +79,130 @@ let vector_length_tester (in1 : float array) =
     arr_len
 
 (** Vectors to be used for test cases *)
+let v5 = [| 1.0; 2.0; 3.0; 4.0; 5.0 |]
+
+let v10 = [| 0.1; 0.2; 0.3; 0.4; 0.5; 0.6; 0.7; 0.8; 0.9; 1.0 |]
+
+let v15 =
+  [|
+    -1.0;
+    -2.0;
+    -3.0;
+    -4.0;
+    -5.0;
+    0.0;
+    1.0;
+    2.0;
+    3.0;
+    4.0;
+    5.0;
+    0.0;
+    -1.0;
+    -2.0;
+    -3.0;
+  |]
+
+let v20 =
+  [|
+    2.5;
+    3.5;
+    4.5;
+    5.5;
+    6.5;
+    7.5;
+    8.5;
+    9.5;
+    10.5;
+    11.5;
+    12.5;
+    13.5;
+    14.5;
+    15.5;
+    16.5;
+    17.5;
+    18.5;
+    19.5;
+    20.5;
+    21.5;
+  |]
+
+let v5_2 = [| 0.5; 1.5; 2.5; 3.5; 4.5 |]
+(*let v5_3 = [| -0.5; -1.5; -2.5; -3.5; -4.5 |] let v10_2 = [| 10.0; 9.0; 8.0;
+  7.0; 6.0; 5.0; 4.0; 3.0; 2.0; 1.0 |] let v10_3 = [| 0.01; 0.02; 0.03; 0.04;
+  0.05; 0.06; 0.07; 0.08; 0.09; 0.1 |] let v10_4 = [| -10.0; -9.0; -8.0; -7.0;
+  -6.0; -5.0; -4.0; -3.0; -2.0; -1.0 |]
+
+  let v20_2 = [| 1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0; 8.0; 9.0; 10.0; 11.0; 12.0;
+  13.0; 14.0; 15.0; 16.0; 17.0; 18.0; 19.0; 20.0; |]*)
 
 let tests =
   "starter test suite"
   >::: [
          (*initialization tests*)
-         ("initalize empty vector" >:: fun _ -> vector_init_tester [||]);
+         ( "initialize vector of length 5 with specific values" >:: fun _ ->
+           vector_init_tester v5 );
+         ( "initialize vector of length 10 with specific values" >:: fun _ ->
+           vector_init_tester v10 );
+         ( "initialize vector of length 15 with specific values" >:: fun _ ->
+           vector_init_tester v15 );
+         ( "initialize vector of length 20 with specific values" >:: fun _ ->
+           vector_init_tester v20 );
          (*vector addition tests*)
          ( "add two empty vectors" >:: fun _ ->
            vector_a_s_tester [||] [||] [||] Vector.add );
+         ( "add two vectors of length 5" >:: fun _ ->
+           vector_a_s_tester [|2.; 4.; 6.; 8.; 10.|] v5 v5 Vector.add );
+         ( "add two vectors of length 10" >:: fun _ ->
+           vector_a_s_tester
+           [|0.2; 0.4; 0.6; 0.8; 1.; 1.2; 1.4; 1.6; 1.8; 2.|]
+             v10 v10 Vector.add );
+         ( "add two vectors of length 15" >:: fun _ ->
+           vector_a_s_tester
+             [|
+               -2.;
+               -4.;
+               -6.;
+               -8.;
+               -10.;
+               0.;
+               2.;
+               4.;
+               6.;
+               8.;
+               10.;
+               0.;
+               -2.;
+               -4.;
+               -6.;
+             |]
+             v15 v15 Vector.add );
+         ( "add two vectors of length 20" >:: fun _ ->
+           vector_a_s_tester
+             [|
+               5.;
+               7.;
+               9.;
+               11.;
+               13.;
+               15.;
+               17.;
+               19.;
+               21.;
+               23.;
+               25.;
+               27.;
+               29.;
+               31.;
+               33.;
+               35.;
+               37.;
+               39.;
+               41.;
+               43.;
+             |]
+             v20 v20 Vector.add );
+         ( "add two vectors of length 5 with different values" >:: fun _ ->
+           vector_a_s_tester [| 1.5; 3.5; 5.5; 7.5; 9.5 |] v5 v5_2 Vector.add );
          (*vector subtraction tests*)
          ( "subtract two empty vectors" >:: fun _ ->
            vector_a_s_tester [||] [||] [||] Vector.sub );
