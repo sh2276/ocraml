@@ -314,7 +314,7 @@ let vec_tests =
 
 (** Function to convert a row of a matrix to a string. *)
 let row_to_string row =
-  String.concat "; " Array.(to_list (map string_of_float row))
+  "[|" ^ String.concat "; " (Array.to_list (Array.map string_of_float row)) ^ "|]"
 
 (** Function to test correct initialization of the matrix. *)
 let matrix_init_tester (in1 : float array array) =

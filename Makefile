@@ -1,3 +1,5 @@
+.PHONY: test
+
 build:
 	dune build
 	rm -f gui.exe
@@ -6,6 +8,7 @@ build:
 clean:
 	dune clean
 	rm -f gui.exe
+	rm -f ./bin/_build/default/gui.ml
 
 test:
 	OCAMLRUNPARAM=b dune exec test/main.exe
