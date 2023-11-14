@@ -6,9 +6,9 @@
     representing matrices, vectors, and other modules built for loading in data
     and processing images.
 
-    Math modules will be tested manually. Test cases for math
-    modules will be developed using both glass and black-box testing, as well as
-    some randomized testing. 
+    Math modules will be tested manually. Test cases for math modules will be
+    developed using both glass and black-box testing, as well as some randomized
+    testing.
 
     This testing approach demonstrates the correctness of the system, as it
     ensures that some untestable features of our system that depend on core,
@@ -64,7 +64,7 @@ let vector_dprod_tester (out : float) (in1 : float array) (in2 : float array) =
   let float_from_op = dot_prod v1 v2 in
   let float_from_infix = v1 @ v2 in
   let ae res =
-    assert_equal ~printer:string_of_float ~msg:"Vector dot produt failed." out
+    assert_equal ~printer:string_of_float ~msg:"Vector dot product failed." out
       res
   in
   ae float_from_op;
@@ -127,36 +127,56 @@ let v20 =
   |]
 
 let v5_2 = [| 0.5; 1.5; 2.5; 3.5; 4.5 |]
-(*let v5_3 = [| -0.5; -1.5; -2.5; -3.5; -4.5 |] let v10_2 = [| 10.0; 9.0; 8.0;
-  7.0; 6.0; 5.0; 4.0; 3.0; 2.0; 1.0 |] let v10_3 = [| 0.01; 0.02; 0.03; 0.04;
-  0.05; 0.06; 0.07; 0.08; 0.09; 0.1 |] let v10_4 = [| -10.0; -9.0; -8.0; -7.0;
-  -6.0; -5.0; -4.0; -3.0; -2.0; -1.0 |]
+let v5_3 = [| -0.5; -1.5; -2.5; -3.5; -4.5 |]
+let v10_2 = [| 10.0; 9.0; 8.0; 7.0; 6.0; 5.0; 4.0; 3.0; 2.0; 1.0 |]
+let v10_3 = [| 0.01; 0.02; 0.03; 0.04; 0.05; 0.06; 0.07; 0.08; 0.09; 0.1 |]
 
-  let v20_2 = [| 1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0; 8.0; 9.0; 10.0; 11.0; 12.0;
-  13.0; 14.0; 15.0; 16.0; 17.0; 18.0; 19.0; 20.0; |]*)
+let v20_2 =
+  [|
+    1.0;
+    2.0;
+    3.0;
+    4.0;
+    5.0;
+    6.0;
+    7.0;
+    8.0;
+    9.0;
+    10.0;
+    11.0;
+    12.0;
+    13.0;
+    14.0;
+    15.0;
+    16.0;
+    17.0;
+    18.0;
+    19.0;
+    20.0;
+  |]
 
 let tests =
   "starter test suite"
   >::: [
          (*initialization tests*)
-         ( "initialize vector of length 5 with specific values" >:: fun _ ->
+         ( " initialize vector of length 5 with specific values" >:: fun _ ->
            vector_init_tester v5 );
-         ( "initialize vector of length 10 with specific values" >:: fun _ ->
+         ( " initialize vector of length 10 with specific values" >:: fun _ ->
            vector_init_tester v10 );
-         ( "initialize vector of length 15 with specific values" >:: fun _ ->
+         ( " initialize vector of length 15 with specific values" >:: fun _ ->
            vector_init_tester v15 );
-         ( "initialize vector of length 20 with specific values" >:: fun _ ->
+         ( " initialize vector of length 20 with specific values" >:: fun _ ->
            vector_init_tester v20 );
          (*vector addition tests*)
-         ( "add two empty vectors" >:: fun _ ->
+         ( " add two empty vectors" >:: fun _ ->
            vector_a_s_tester [||] [||] [||] Vector.add );
-         ( "add two vectors of length 5" >:: fun _ ->
-           vector_a_s_tester [|2.; 4.; 6.; 8.; 10.|] v5 v5 Vector.add );
-         ( "add two vectors of length 10" >:: fun _ ->
+         ( " add two vectors of length 5" >:: fun _ ->
+           vector_a_s_tester [| 2.; 4.; 6.; 8.; 10. |] v5 v5 Vector.add );
+         ( " add two vectors of length 10" >:: fun _ ->
            vector_a_s_tester
-           [|0.2; 0.4; 0.6; 0.8; 1.; 1.2; 1.4; 1.6; 1.8; 2.|]
+             [| 0.2; 0.4; 0.6; 0.8; 1.; 1.2; 1.4; 1.6; 1.8; 2. |]
              v10 v10 Vector.add );
-         ( "add two vectors of length 15" >:: fun _ ->
+         ( " add two vectors of length 15" >:: fun _ ->
            vector_a_s_tester
              [|
                -2.;
@@ -176,7 +196,7 @@ let tests =
                -6.;
              |]
              v15 v15 Vector.add );
-         ( "add two vectors of length 20" >:: fun _ ->
+         ( " add two vectors of length 20" >:: fun _ ->
            vector_a_s_tester
              [|
                5.;
@@ -201,19 +221,102 @@ let tests =
                43.;
              |]
              v20 v20 Vector.add );
-         ( "add two vectors of length 5 with different values" >:: fun _ ->
+         ( " add two vectors of length 5 with different values" >:: fun _ ->
            vector_a_s_tester [| 1.5; 3.5; 5.5; 7.5; 9.5 |] v5 v5_2 Vector.add );
          (*vector subtraction tests*)
-         ( "subtract two empty vectors" >:: fun _ ->
+         ( " subtract two empty vectors" >:: fun _ ->
            vector_a_s_tester [||] [||] [||] Vector.sub );
+         ( " subtract two vectors of length 5" >:: fun _ ->
+           vector_a_s_tester [| 0.5; 0.5; 0.5; 0.5; 0.5 |] v5 v5_2 Vector.sub );
+         ( " subtract two vectors of length 10" >:: fun _ ->
+           vector_a_s_tester
+             [| -9.9; -8.8; -7.7; -6.6; -5.5; -4.4; -3.3; -2.2; -1.1; 0.0 |]
+             v10 v10_2 Vector.sub );
+         ( " subtract two vectors of length 15" >:: fun _ ->
+           vector_a_s_tester
+             [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |]
+             v15 v15 Vector.sub );
+         ( " subtract two vectors of length 20" >:: fun _ ->
+           vector_a_s_tester
+             [|
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+               1.5;
+             |]
+             v20 v20_2 Vector.sub );
+         ( " subtract two vectors of length 5 with different values" >:: fun _ ->
+           vector_a_s_tester
+             [| -0.5; -0.5; -0.5; -0.5; -0.5 |]
+             v5_2 v5 Vector.sub );
          (*vector scalar multiplication tests*)
-         ( "multiply empty vector by 0.0" >:: fun _ ->
+         ( " multiply empty vector by 0.0" >:: fun _ ->
            vector_s_mult_tester [||] 0.0 [||] );
+         ( " multiply vector of length 5 by 2.0" >:: fun _ ->
+           vector_s_mult_tester [| 2.0; 4.0; 6.0; 8.0; 10.0 |] 2.0 v5 );
+         ( " multiply vector of length 15 by 0.5" >:: fun _ ->
+           vector_s_mult_tester
+             [|
+               -0.5;
+               -1.0;
+               -1.5;
+               -2.0;
+               -2.5;
+               0.0;
+               0.5;
+               1.0;
+               1.5;
+               2.0;
+               2.5;
+               0.0;
+               -0.5;
+               -1.0;
+               -1.5;
+             |]
+             0.5 v15 );
          (*vector dot product tests*)
-         ( "multiply two singleton vectors" >:: fun _ ->
+         ( " dot product of two singleton vectors" >:: fun _ ->
            vector_dprod_tester 1.0 [| 1.0 |] [| 1.0 |] );
+         ( "dot product of two length 5 vectors" >:: fun _ ->
+           vector_dprod_tester 47.5 v5 v5_2 );
+         ( " dot product of two length 10 vectors" >:: fun _ ->
+           vector_dprod_tester 0.385 v10 v10_3 );
+         ( " dot product of two length 15 vectors" >:: fun _ ->
+           vector_dprod_tester 124.0 v15 v15 );
+         ( " dot product of two length 20 vectors" >:: fun _ ->
+           vector_dprod_tester 3185.0 v20 v20_2 );
          (*vector length tests*)
-         ("length of empty vector" >:: fun _ -> vector_length_tester [||]);
+         (" length of empty vector" >:: fun _ -> vector_length_tester [||]);
+         (" length of vector of length 5" >:: fun _ -> vector_length_tester v5);
+         (" length of vector of length 10" >:: fun _ -> vector_length_tester v10);
+         (" length of vector of length 15" >:: fun _ -> vector_length_tester v15);
+         (" length of vector of length 20" >:: fun _ -> vector_length_tester v20);
+         ( " length of vector of length 5 with different values" >:: fun _ ->
+           vector_length_tester v5_2 );
+         ( " length of vector of length 10 with different values" >:: fun _ ->
+           vector_length_tester v10_2 );
+         ( " length of vector of length 20 with different values" >:: fun _ ->
+           vector_length_tester v20_2 );
+         ( " length of vector of length 5 with negative values" >:: fun _ ->
+           vector_length_tester v5_3 );
+         ( " length of vector of length 10 with negative values" >:: fun _ ->
+           vector_length_tester v10_3 );
        ]
 
 let _ = run_test_tt_main tests
