@@ -314,7 +314,9 @@ let vec_tests =
 
 (** Function to convert a row of a matrix to a string. *)
 let row_to_string row =
-  "[|" ^ String.concat "; " (Array.to_list (Array.map string_of_float row)) ^ "|]"
+  "[|"
+  ^ String.concat "; " (Array.to_list (Array.map string_of_float row))
+  ^ "|]"
 
 (** Function to test correct initialization of the matrix. *)
 let matrix_init_tester (in1 : float array array) =
@@ -387,6 +389,15 @@ let matrix_transpose_tester (mat : float array array) (out : float array array)
 (* Test cases for the Matrix module *)
 let m3_3 = [| [| 1.0; 2.0; 3.0 |]; [| 4.0; 5.0; 6.0 |]; [| 7.0; 8.0; 9.0 |] |]
 let m3_3_2 = [| [| 2.0; 0.0; 1.0 |]; [| 1.0; 0.0; 1.0 |]; [| 1.0; 1.0; 0.0 |] |]
+
+let m3_4 =
+  [|
+    [| 1.0; 2.0; 3.0; 4.0 |];
+    [| 5.0; 6.0; 7.0; 8.0 |];
+    [| 9.0; 10.0; 11.0; 12.0 |];
+  |]
+
+let m4_2 = [| [| 4.0; 1.0 |]; [| 4.0; 2.0 |]; [| 2.0; 3.0 |]; [| 4.0; 5.0 |] |]
 let v3 = [| 1.0; 2.0; 3.0 |]
 
 (**Matrix Test Cases*)
@@ -394,28 +405,47 @@ let mat_tests =
   [
     (* Initialization tests *)
     ("initialize empty matrix" >:: fun _ -> matrix_init_tester [||]);
-    ( "initialize matrix with specific values" >:: fun _ ->
+    ( "initialize 3x3 matrix " >:: fun _ ->
       matrix_init_tester m3_3 );
+    ( "initalize non square matrix" >:: fun _-> matrix_init_tester m4_2);
     (* Matrix dimensions test *)
-    ("check matrix dimensions" >:: fun _ -> matrix_dim_tester m3_3 3 3);
+    ("check 3x3 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_3 3 3);
+    ("check 3x4 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_4 3 4);
+    ("check 4x2 matrix dimensions" >:: fun _ -> matrix_dim_tester m4_2 4 2);
     (* Matrix-vector multiplication tests *)
-    ( "multiply matrix by vector" >:: fun _ ->
-      mat_vec_prod_tester [| 14.0; 32.0; 50.0 |] m3_3 v3 );
-    ( "multiply matrix by vector using infix operator" >:: fun _ ->
+    ( "multiply 3x3 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 14.0; 32.0; 50.0 |] m3_3 v3 );
     (* Matrix-matrix multiplication tests *)
     ( "multiply two matrices" >:: fun _ ->
       mat_mat_prod_tester
-        [|
-          [| 7.0; 3.0; 3.0 |]; [| 19.0; 6.0; 9.0 |]; [| 31.0; 9.0; 15.0 |];
-        |]
+        [| [| 7.0; 3.0; 3.0 |]; [| 19.0; 6.0; 9.0 |]; [| 31.0; 9.0; 15.0 |] |]
         m3_3 m3_3_2 );
+    ( "multiply 3*4 and 4*2 matrix" >:: fun _ ->
+      mat_mat_prod_tester
+        [| [| 34.0; 34.0 |]; [| 90.0; 78.0 |]; [| 146.0; 122.0 |] |]
+        m3_4 m4_2 );
     (* Matrix transpose test *)
-    ( "transpose matrix" >:: fun _ ->
+    ( "transpose 3x3 matrix" >:: fun _ ->
       matrix_transpose_tester m3_3
         [| [| 1.0; 4.0; 7.0 |]; [| 2.0; 5.0; 8.0 |]; [| 3.0; 6.0; 9.0 |] |] );
+    ( "transpose 3x3 matrix m3_3_2" >:: fun _ ->
+      matrix_transpose_tester m3_3_2
+        [| [| 2.0; 1.0; 1.0 |]; [| 0.0; 0.0; 1.0 |]; [| 1.0; 1.0; 0.0 |] |] );
+    ( "transpose 3x4 matrix m3_4" >:: fun _ ->
+      matrix_transpose_tester m3_4
+        [|
+          [| 1.0; 5.0; 9.0 |];
+          [| 2.0; 6.0; 10.0 |];
+          [| 3.0; 7.0; 11.0 |];
+          [| 4.0; 8.0; 12.0 |];
+        |] );
+    ( "transpose 4x2 matrix m4_2" >:: fun _ ->
+      matrix_transpose_tester m4_2
+        [| [| 4.0; 4.0; 2.0; 4.0 |]; [| 1.0; 2.0; 3.0; 5.0 |] |] );
     (* Conversion to array test *)
-    ("convert matrix to array" >:: fun _ -> matrix_init_tester m3_3);
+    ("convert 3x3 matrix to array" >:: fun _ -> matrix_init_tester m3_3);
+    ("convert 3x4 matrix to array" >:: fun _ -> matrix_init_tester m3_4);
+    ("convert 4x2 matrix to array" >:: fun _ -> matrix_init_tester m4_2);
   ]
 
 let suite = "ocraml test suite" >::: List.flatten [ vec_tests; mat_tests ]

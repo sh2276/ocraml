@@ -11,11 +11,12 @@ let assert_m_v_dim (mat : t) (vec : Vector.t) =
   if num_rows mat <> Vector.length vec then
     invalid_arg "Matrix and vector are not compatible lengths"
 
-(* Checks if a two matrices have the same dimensions. *)
-let assert_m_m_dim (m1 : t) (m2 : t) =
-  if num_rows m1 <> num_rows m2 || num_cols m1 <> num_cols m2 then
-    invalid_arg "Matricies have incompatible dimensions"
-
+(* Checks if a two matrices have compatible dimenstions for multiplication. *)
+(* Checks if two matrices have compatible dimensions for multiplication. *)
+  let assert_m_m_dim (m1 : t) (m2 : t) =
+    if num_cols m1 <> num_rows m2 then
+      invalid_arg "Matrices have incompatible dimensions for multiplication"
+  
 (* Multiplies a matrix and a vector. *)
 let mat_vec_prod (mat : t) (vec : Vector.t) =
   assert_m_v_dim mat vec;
@@ -48,7 +49,7 @@ let ( * ) m1 m2 = mat_mat_prod m1 m2
 let transpose mat =
   let nr = num_rows mat in
   let nc = num_cols mat in
-  let trans = Array.make_matrix nr nc 0.0 in
+  let trans = Array.make_matrix nc nr 0.0 in
   for i = 0 to nr - 1 do
     for j = 0 to nc - 1 do
       trans.(j).(i) <- mat.(i).(j)
