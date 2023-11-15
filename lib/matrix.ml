@@ -11,7 +11,6 @@ let assert_m_v_dim (mat : t) (vec : Vector.t) =
   if num_rows mat <> Vector.length vec then
     invalid_arg "Matrix and vector are not compatible lengths"
 
-(* Checks if a two matrices have compatible dimenstions for multiplication. *)
 (* Checks if two matrices have compatible dimensions for multiplication. *)
   let assert_m_m_dim (m1 : t) (m2 : t) =
     if num_cols m1 <> num_rows m2 then
