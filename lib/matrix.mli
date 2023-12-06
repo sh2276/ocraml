@@ -21,12 +21,10 @@ val ( @ ) : t -> Vector.t -> Vector.t
     and [Vector] have compatible dimensions (i.e. n*m matrix and an n*1 vector).
     (Infix)*)
 
-
 val mat_mat_prod : t -> t -> t
 (** Matrix-matrix product of [Matrix] m1 and [Matrix] m2. Requires: [Matrix] m1
     and [Matrix] m2 have compatible dimensions (i.e. n*m matrix m1 and an m*r
     matrix m2). *)
-
 
 val ( * ) : t -> t -> t
 (** Matrix-matrix product of [Matrix] m1 and [Matrix] m2. Requires: [Matrix] m1
