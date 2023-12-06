@@ -14,9 +14,9 @@ let predict inputs (m, b) =
   let open Vector in
   unbiased + b |> argmax
 
-let update_weights learning_rate expected inputs (m, b) =
+let update_weights _ (* learning_rate *) expected inputs (m, b) =
   let actual = predict inputs (m, b) in
-  let error = if expected = actual then 0.0 else 1.0 in
+  let _ (* error *) = if expected = actual then 0.0 else 1.0 in
   (* let updated_weights = Matrix.(init (Array.map () ()) ) in let
      updated_weights = Matrix.(m + (learning_rate *. error *. inputs)) in let
      updated_bias = Vector.(b + (learning_rate *. error)) in (updated_weights,

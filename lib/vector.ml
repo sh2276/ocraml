@@ -6,7 +6,7 @@ let assert_eq_len v1 v2 =
     invalid_arg "Vectors must have the same length"
 
 (* Initalizes a vector from a float array.*)
-let init (lst: float array) = lst
+let init (lst : float array) = lst
 
 (*Adds two vectors of the same length.*)
 let add (v1 : t) (v2 : t) =
@@ -38,3 +38,16 @@ let length (v : t) = Array.length v
 
 (* Converts a vector to a float array. *)
 let to_array (v1 : t) = v1
+
+let argmax = function
+  | [||] -> failwith "Empty vector"
+  | arr ->
+      let _, max_idx, _ =
+        Array.fold_left
+          (fun (max_score, max_idx, cur_idx) score ->
+            if score > max_score then Stdlib.(score, cur_idx, cur_idx + 1)
+            else Stdlib.(max_score, max_idx, cur_idx + 1))
+          (arr.(0), 0, 0)
+          arr
+      in
+      max_idx

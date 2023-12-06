@@ -38,3 +38,6 @@ val length : t -> int
 
 val to_array : t -> float array
 (** Convert a [Vector] to an array of floats. *)
+
+val argmax : t -> int
+(** Finds the argmax of a [Vector]. If there are multiple maximums, [argmax v] will be the lowest index *)

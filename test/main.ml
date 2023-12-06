@@ -81,6 +81,12 @@ let vector_length_tester (in1 : float array) =
   assert_equal ~printer:string_of_int ~msg:"Vector length test failed." vec_len
     arr_len
 
+(** Function to test the argmax of a vector *)
+let vector_argmax_tester (out : int) (in1 : float array) =
+  let vect = Vector.init in1 in
+  let idx = Vector.argmax vect in
+  assert_equal ~printer:string_of_int out idx
+
 (** Vectors to be used for test cases *)
 let v5 = [| 1.0; 2.0; 3.0; 4.0; 5.0 |]
 
@@ -158,10 +164,10 @@ let v20_2 =
     20.0;
   |]
 
-(** Vector test cases*)
+(** Vector test cases *)
 let vec_tests =
   [
-    (*initialization tests*)
+    (* initialization tests *)
     ( " initialize vector of length 5 with specific values" >:: fun _ ->
       vector_init_tester v5 );
     ( " initialize vector of length 10 with specific values" >:: fun _ ->
@@ -170,7 +176,7 @@ let vec_tests =
       vector_init_tester v15 );
     ( " initialize vector of length 20 with specific values" >:: fun _ ->
       vector_init_tester v20 );
-    (*vector addition tests*)
+    (* vector addition tests *)
     ( " add two empty vectors" >:: fun _ ->
       vector_a_s_tester [||] [||] [||] Vector.add );
     ( " add two vectors of length 5" >:: fun _ ->
@@ -277,33 +283,40 @@ let vec_tests =
           -1.5;
         |]
         0.5 v15 );
-    (*vector dot product tests*)
-    ( " dot product of two singleton vectors" >:: fun _ ->
+    (* vector dot product tests *)
+    ( "dot product of two singleton vectors" >:: fun _ ->
       vector_dprod_tester 1.0 [| 1.0 |] [| 1.0 |] );
     ( "dot product of two length 5 vectors" >:: fun _ ->
       vector_dprod_tester 47.5 v5 v5_2 );
-    ( " dot product of two length 10 vectors" >:: fun _ ->
+    ( "dot product of two length 10 vectors" >:: fun _ ->
       vector_dprod_tester 0.385 v10 v10_3 );
-    ( " dot product of two length 15 vectors" >:: fun _ ->
+    ( "dot product of two length 15 vectors" >:: fun _ ->
       vector_dprod_tester 124.0 v15 v15 );
-    ( " dot product of two length 20 vectors" >:: fun _ ->
+    ( "dot product of two length 20 vectors" >:: fun _ ->
       vector_dprod_tester 3185.0 v20 v20_2 );
-    (*vector length tests*)
-    (" length of empty vector" >:: fun _ -> vector_length_tester [||]);
-    (" length of vector of length 5" >:: fun _ -> vector_length_tester v5);
-    (" length of vector of length 10" >:: fun _ -> vector_length_tester v10);
-    (" length of vector of length 15" >:: fun _ -> vector_length_tester v15);
-    (" length of vector of length 20" >:: fun _ -> vector_length_tester v20);
-    ( " length of vector of length 5 with different values" >:: fun _ ->
+    (* vector length tests *)
+    ("length of empty vector" >:: fun _ -> vector_length_tester [||]);
+    ("length of vector of length 5" >:: fun _ -> vector_length_tester v5);
+    ("length of vector of length 10" >:: fun _ -> vector_length_tester v10);
+    ("length of vector of length 15" >:: fun _ -> vector_length_tester v15);
+    ("length of vector of length 20" >:: fun _ -> vector_length_tester v20);
+    ( "length of vector of length 5 with different values" >:: fun _ ->
       vector_length_tester v5_2 );
-    ( " length of vector of length 10 with different values" >:: fun _ ->
+    ( "length of vector of length 10 with different values" >:: fun _ ->
       vector_length_tester v10_2 );
-    ( " length of vector of length 20 with different values" >:: fun _ ->
+    ( "length of vector of length 20 with different values" >:: fun _ ->
       vector_length_tester v20_2 );
-    ( " length of vector of length 5 with negative values" >:: fun _ ->
+    ( "length of vector of length 5 with negative values" >:: fun _ ->
       vector_length_tester v5_3 );
-    ( " length of vector of length 10 with negative values" >:: fun _ ->
+    ( "length of vector of length 10 with negative values" >:: fun _ ->
       vector_length_tester v10_3 );
+    (* vector argmax tests *)
+    ("argmax of vector of length 5" >:: fun _ -> vector_argmax_tester 4 v5);
+    ("argmax of vector of length 10" >:: fun _ -> vector_argmax_tester 9 v10);
+    ( "argmax of vector of length 15 with negative values" >:: fun _ ->
+      vector_argmax_tester 10 v15 );
+    ( "argmax of vector with the same values" >:: fun _ ->
+      vector_argmax_tester 0 [| 1.; 1. |] );
   ]
 
 (*==============================================================================
@@ -400,14 +413,13 @@ let m3_4 =
 let m4_2 = [| [| 4.0; 1.0 |]; [| 4.0; 2.0 |]; [| 2.0; 3.0 |]; [| 4.0; 5.0 |] |]
 let v3 = [| 1.0; 2.0; 3.0 |]
 
-(**Matrix Test Cases*)
+(** Matrix Test Cases *)
 let mat_tests =
   [
     (* Initialization tests *)
     ("initialize empty matrix" >:: fun _ -> matrix_init_tester [||]);
-    ( "initialize 3x3 matrix " >:: fun _ ->
-      matrix_init_tester m3_3 );
-    ( "initalize non square matrix" >:: fun _-> matrix_init_tester m4_2);
+    ("initialize 3x3 matrix " >:: fun _ -> matrix_init_tester m3_3);
+    ("initalize non square matrix" >:: fun _ -> matrix_init_tester m4_2);
     (* Matrix dimensions test *)
     ("check 3x3 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_3 3 3);
     ("check 3x4 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_4 3 4);
@@ -447,6 +459,10 @@ let mat_tests =
     ("convert 3x4 matrix to array" >:: fun _ -> matrix_init_tester m3_4);
     ("convert 4x2 matrix to array" >:: fun _ -> matrix_init_tester m4_2);
   ]
+
+(*==============================================================================
+                            PERCEPTRON TEST SUITE
+==============================================================================*)
 
 let suite = "ocraml test suite" >::: List.flatten [ vec_tests; mat_tests ]
 let _ = run_test_tt_main suite
