@@ -7,8 +7,9 @@
     and processing images.
 
     Math modules will be tested manually. Test cases for math modules will be
-    developed using both glass and black-box testing.
-
+    developed using both glass and black-box testing. Other modules will be 
+    tested with of user-testing (i.e. testing through the GUI).
+    
     This testing approach demonstrates the correctness of the system, as it
     ensures that some untestable features of our system that depend on core,
     testable modules, have dependencies that are functioning as expected. *)
