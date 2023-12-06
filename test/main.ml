@@ -1,14 +1,13 @@
 (** Test plan: Since much of our system is built around somewhat untestable
-    components (i.e.) GUI components, and results of neural network training
-    (which is based on) some degree of randomization with regard to weight
+    components such as GUI components and results of neural network training
+    which are based on some degree of randomization with regard to weight
     initalization, our testing plan seeks to thoroughly test the core components
     of our system. Specifically, we want to test the math modules developed for
     representing matrices, vectors, and other modules built for loading in data
     and processing images.
 
     Math modules will be tested manually. Test cases for math modules will be
-    developed using both glass and black-box testing, as well as some randomized
-    testing.
+    developed using both glass and black-box testing.
 
     This testing approach demonstrates the correctness of the system, as it
     ensures that some untestable features of our system that depend on core,
@@ -324,7 +323,7 @@ let matrix_init_tester (in1 : float array array) =
   let arr_from_matrix = Matrix.to_array mat in
   assert_equal
     ~printer:(fun mat ->
-      Printf.sprintf "[|%s|]"
+      Printf.sprintf "[| %s |]"
         (String.concat "; " (Array.to_list (Array.map row_to_string mat))))
     ~msg:"Matrix not initialized properly." in1 arr_from_matrix
 
@@ -348,7 +347,7 @@ let mat_vec_prod_tester (out : float array) (mat : float array array)
   let ae o i =
     assert_equal
       ~printer:(fun arr ->
-        Printf.sprintf "[|%s|]"
+        Printf.sprintf "[| %s |]"
           (String.concat "; " Array.(to_list (map string_of_float arr))))
       ~msg:"Vector operation failed." o i
   in
@@ -365,7 +364,7 @@ let mat_mat_prod_tester (out : float array array) (mat1 : float array array)
   let ae o i =
     assert_equal
       ~printer:(fun m ->
-        Printf.sprintf "[|%s|]"
+        Printf.sprintf "[| %s |]"
           (String.concat "; " (Array.to_list (Array.map row_to_string m))))
       ~msg:"Matrix operation failed." o i
   in
@@ -380,7 +379,7 @@ let matrix_transpose_tester (mat : float array array) (out : float array array)
   let ae o i =
     assert_equal
       ~printer:(fun m ->
-        Printf.sprintf "[|%s|]"
+        Printf.sprintf "[| %s |]"
           (String.concat "; " (Array.to_list (Array.map row_to_string m))))
       ~msg:"Matrix transpose failed." o i
   in
@@ -405,9 +404,8 @@ let mat_tests =
   [
     (* Initialization tests *)
     ("initialize empty matrix" >:: fun _ -> matrix_init_tester [||]);
-    ( "initialize 3x3 matrix " >:: fun _ ->
-      matrix_init_tester m3_3 );
-    ( "initalize non square matrix" >:: fun _-> matrix_init_tester m4_2);
+    ("initialize 3x3 matrix " >:: fun _ -> matrix_init_tester m3_3);
+    ("initalize non square matrix" >:: fun _ -> matrix_init_tester m4_2);
     (* Matrix dimensions test *)
     ("check 3x3 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_3 3 3);
     ("check 3x4 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_4 3 4);
