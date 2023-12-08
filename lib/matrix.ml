@@ -12,10 +12,10 @@ let assert_m_v_dim (mat : t) (vec : Vector.t) =
     invalid_arg "Matrix and vector are not compatible lengths"
 
 (* Checks if two matrices have compatible dimensions for multiplication. *)
-  let assert_m_m_dim (m1 : t) (m2 : t) =
-    if num_cols m1 <> num_rows m2 then
-      invalid_arg "Matrices have incompatible dimensions for multiplication"
-  
+let assert_m_m_dim (m1 : t) (m2 : t) =
+  if num_cols m1 <> num_rows m2 then
+    invalid_arg "Matrices have incompatible dimensions for multiplication"
+
 (* Multiplies a matrix and a vector. *)
 let mat_vec_prod (mat : t) (vec : Vector.t) =
   assert_m_v_dim mat vec;
@@ -58,3 +58,24 @@ let transpose mat =
 
 (* Converts a matrix to a float array array. *)
 let to_array (m : t) = m
+
+(*Converts a matrix into a string.*)
+let to_string (mat : t) =
+  
+  let rows = num_rows mat in
+  let cols = num_cols mat in
+  let _ = assert (rows != 0 && cols != 0) in
+  let row_strings =
+    Array.init rows (fun i ->
+        let row = mat.(i) in
+        let row_str =
+          Array.map string_of_float row |> Array.to_list |> String.concat "; "
+        in
+        "[ " ^ row_str ^ " ]")
+  in
+  "[ " ^ String.concat ";\n" (Array.to_list row_strings) ^ " ]"
+
+
+(*Prints a matrix*)
+let print_mat (mat : t) = 
+  mat |> to_string |> print_endline
