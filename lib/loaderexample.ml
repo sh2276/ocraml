@@ -25,4 +25,4 @@ let _ =
 let _ =
   (* get a matrix, which is a vector of (vector representing each image) *)
   let vector_of_imagevectors = L.to_matrix in
-  vector_of_imagevectors
+  Ocraml.Matrix.print_mat vector_of_imagevectors
