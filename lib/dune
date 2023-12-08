@@ -1,4 +1,10 @@
 (library
  (name ocraml)
  (public_name OCRaml)
- (libraries))
+ (libraries bimage bimage-unix bimage-io)
+ (modules matrix perceptron vector loader))
+
+(executable
+ (name loaderexample)
+ (libraries ocraml bimage bimage-unix bimage-io)
+ (modules loaderexample))

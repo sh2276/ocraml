@@ -16,6 +16,9 @@ test:
 gui:
 	OCAMLRUNPARAM=b dune exec bin/gui.exe
 
+loader:
+	OCAMLRUNPARAM=b dune exec lib/loaderexample.exe
+
 doc:
 	dune build @doc
 
