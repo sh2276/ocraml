@@ -41,3 +41,9 @@ val to_array : t -> float array
 
 val argmax : t -> int
 (** Finds the argmax of a [Vector]. If there are multiple maximums, [argmax v] will be the lowest index *)
+
+val to_string : t -> string
+(**Convert a [Vector] into a string for debug and printing purposes.*)
+
+val print_vec : t -> unit
+(**Print a [Vector] for debug and testing purposes.*)

@@ -42,3 +42,9 @@ val num_cols : t -> int
 
 val to_array : t -> float array array
 (** Convert a [Matrix] to an array of float arrays. *)
+
+val to_string : t -> string
+(**Convert a [Matrix] into a string for debug and printing purposes.*)
+
+val print_mat : t -> unit
+(**Print a [Matrix] for debug and testing purposes.*)
