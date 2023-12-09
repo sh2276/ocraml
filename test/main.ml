@@ -7,9 +7,9 @@
     and processing images.
 
     Math modules will be tested manually. Test cases for math modules will be
-    developed using both glass and black-box testing. Other modules will be 
+    developed using both glass and black-box testing. Other modules will be
     tested with of user-testing (i.e. testing through the GUI).
-    
+
     This testing approach demonstrates the correctness of the system, as it
     ensures that some untestable features of our system that depend on core,
     testable modules, have dependencies that are functioning as expected. *)
@@ -460,9 +460,13 @@ let mat_tests =
     ("convert 4x2 matrix to array" >:: fun _ -> matrix_init_tester m4_2);
   ]
 
+let loader_tests = []
+
 (*==============================================================================
                             PERCEPTRON TEST SUITE
 ==============================================================================*)
 
-let suite = "ocraml test suite" >::: List.flatten [ vec_tests; mat_tests ]
+let suite =
+  "ocraml test suite" >::: List.flatten [ vec_tests; mat_tests; loader_tests ]
+
 let _ = run_test_tt_main suite

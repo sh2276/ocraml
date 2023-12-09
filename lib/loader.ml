@@ -40,3 +40,6 @@ let to_matrix files colortype transformations =
   in
   let valarrarr = Array.of_list (List.map Array.of_list vallistlist) in
   Matrix.init valarrarr
+
+let to_string files colortype transformations =
+  Matrix.to_string (to_matrix files colortype transformations)

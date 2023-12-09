@@ -56,3 +56,9 @@ val to_matrix :
 (** [to_matrix] returns a vector of vectors (a Matrix), where each vector
     represents a the vector representation of an image in each file from M.files *)
 (* end *)
+
+val to_string :
+  string list ->
+  [< `Gray | `Rgb | `Rgba ] Color.t ->
+  Expr.pixel Expr.t list ->
+  string
