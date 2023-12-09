@@ -12,8 +12,8 @@ module type PerceptronType = sig
         Requires: [inputs] has a dimension of nx1 and [perceptron] was created with size n. *)
     
     val update_weights : float -> 'a -> Vector.t -> 'a t -> 'a t
-    (** [update_weights learning_rate expected actual inputs perceptron] updates the weights of the 
+    (** [update_weights learning_rate expected inputs perceptron] updates the weights of the 
         perceptron based on the error. *)
 end
 
-module Perceptron: PerceptronType
+module Perceptron : PerceptronType

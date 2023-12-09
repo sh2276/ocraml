@@ -57,8 +57,8 @@ module Perceptron : PerceptronType = struct
     if expected = actual then (m, b, f)
     else
       let target = Array.make (Vector.length b) 0.0 in
-      target.(Class.index f actual) <- 1.0;
-      target.(Class.index f expected) <- -1.0;
+      target.(Class.index f actual) <- -1.0;
+      target.(Class.index f expected) <- 1.0;
       let target_v = Vector.init target in
 
       let error = Vector.(target_v - b) in
