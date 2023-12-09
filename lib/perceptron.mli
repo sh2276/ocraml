@@ -3,7 +3,7 @@ module type PerceptronType = sig
 
     type 'a t
     (** Representation type of [Perceptron] *)
-
+    
     val create : int -> 'a list -> 'a t
     (** [create n lst] will create a [Perceptron] with [n] inputs, and a list of distinct classes *)
     

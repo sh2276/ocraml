@@ -41,12 +41,13 @@ module Perceptron : PerceptronType = struct
   let create num_inputs lst =
     let c = Class.create lst in
     let num_classes = Class.num_of_classes c in
-    let weights = Matrix.init (Array.make_matrix num_classes num_inputs 0.0) in
+    let weights = Matrix.init (Array.make_matrix num_inputs num_classes 0.0) in
     let biases = Vector.init (Array.make num_classes 0.0) in
     (weights, biases, c)
 
   let predict inputs (m, b, f) =
     let open Matrix in
+    let m = transpose m in
     assert_m_v_dim m inputs;
     let unbiased = m @ inputs in
     let open Vector in
@@ -61,11 +62,14 @@ module Perceptron : PerceptronType = struct
       target.(Class.index f expected) <- 1.0;
       let target_v = Vector.init target in
 
-      let error = Vector.(target_v - b) in
+      let error = Vector.(target_v - b |> ( * ) learning_rate) in
       let add_w =
         Matrix.(
           ([| Vector.to_array error |] |> init |> transpose)
-          * init [| Vector.(b |> ( * ) learning_rate |> to_array) |])
+          * init [| Vector.(inputs |> to_array) |]
+          |> transpose)
       in
+      print_endline Matrix.(to_string (m + add_w));
+      print_endline Vector.(to_string (b + error));
       (Matrix.(m + add_w), Vector.(b + error), f)
 end
