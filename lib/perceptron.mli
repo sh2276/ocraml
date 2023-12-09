@@ -13,8 +13,8 @@ module type PerceptronType = sig
       with size n. *)
 
   val update_weights : float -> 'a -> Vector.t -> 'a t -> 'a t
-  (** [update_weights learning_rate expected actual inputs perceptron] updates
-      the weights of the perceptron based on the error. *)
+  (** [update_weights learning_rate expected inputs perceptron] updates the
+      weights of the perceptron based on the error. *)
 end
 
 module Perceptron : PerceptronType
