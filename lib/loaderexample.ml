@@ -9,6 +9,7 @@ let _ =
   in
 
   let _ = to_string files gray transformations in
+  let _ = dir_to_matrix "./lib/mnist_png/training/0/" gray transformations in
 
   (* get a matrix, which is a vector of (vector representing each image) *)
   let vector_of_imagevectors = to_matrix files gray transformations in

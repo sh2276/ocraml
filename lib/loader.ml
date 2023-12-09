@@ -43,3 +43,10 @@ let to_matrix files colortype transformations =
 
 let to_string files colortype transformations =
   Matrix.to_string (to_matrix files colortype transformations)
+
+let dir_to_matrix dir colortype transformations =
+  let files = Sys.readdir dir in
+  let files = List.map (fun x -> dir ^ x) (Array.to_list files) in
+  let out = to_matrix files colortype transformations in
+  let _ = print_endline "files loaded" in
+  out

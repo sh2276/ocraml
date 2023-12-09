@@ -29,8 +29,9 @@ val files_to_imglist :
 val transform_image :
   pixel t list -> ('a, 'b, 'c) Image.t -> ('a, 'b, 'c) Image.t
 (** [transform_image] takes a list of transformations, from Bimage.Expr, and
-    applies them to an Image [img]. Example usage: transform_image
-    [[(invert ())]] img *)
+    applies them to an Image [img]. This will help us augment data to make our
+    model more robust to rotations and other transforms. Example usage:
+    transform_image [[(invert ())]] img *)
 
 val transform_all_images :
   pixel t list -> ('a, 'b, 'c) Image.t list -> ('a, 'b, 'c) Image.t list
@@ -62,3 +63,9 @@ val to_string :
   [< `Gray | `Rgb | `Rgba ] Color.t ->
   Expr.pixel Expr.t list ->
   string
+
+val dir_to_matrix :
+  string ->
+  [< `Gray | `Rgb | `Rgba ] Color.t ->
+  Expr.pixel Expr.t list ->
+  Matrix.t
