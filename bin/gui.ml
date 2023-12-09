@@ -27,18 +27,15 @@ let demo () =
   (* TODO: replace this image with uploaded image from page 1 *)
   let cur_image = { num = 0 } in
 
-  let get_image =
+  let image () =
     W.image ~w:(width / 2) (Printf.sprintf "uploads/%u.png" cur_image.num)
   in
-  let image_layout = L.tower_of_w [ get_image ] in
+  let image_layout = L.tower_of_w [ image () ] in
 
   let slider_title = section_title "Progress bar" in
   let slider = W.slider ~kind:Slider.HBar 100 in
   let percent = W.label "    0%" in
-  let set_percent w x =
-    Label.set (W.get_label w)
-      (Printf.sprintf "%u%%" x ^ Printf.sprintf "%u" cur_image.num)
-  in
+  let set_percent w x = Label.set (W.get_label w) (Printf.sprintf "%u%%" x) in
   let action w1 w2 _ =
     let x = Slider.value (W.get_slider w1) in
     set_percent w2 x
@@ -71,14 +68,7 @@ let demo () =
         let x = Slider.value sw in
         if x >= 100 || T.should_exit ev then (
           cur_image.num <- cur_image.num + 1;
-          L.set_rooms image_layout
-            [
-              L.tower_of_w
-                [
-                  W.image ~w:(width / 2)
-                    (Printf.sprintf "uploads/%u.png" cur_image.num);
-                ];
-            ];
+          L.set_rooms image_layout [ L.tower_of_w [ image () ] ];
           T.will_exit ev;
           Button.reset bw)
         else (
