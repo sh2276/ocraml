@@ -26,7 +26,10 @@ let _ = print_endline training_dir
 let _ = print_endline "What directory is your input data in?: "
 let input_dir = input_line stdin
 let _ = print_endline input_dir
-let input_dir = "./uploads/"
+let input_dir = if input_dir = "" then "./uploads/" else input_dir
+
+(* module Perceptron = Perceptron *)
+(* let x = Perceptron.create *)
 
 let input_files =
   List.map (fun x -> input_dir ^ x) (Array.to_list (Sys.readdir input_dir))
