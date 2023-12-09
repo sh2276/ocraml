@@ -7,9 +7,9 @@
     and processing images.
 
     Math modules will be tested manually. Test cases for math modules will be
-    developed using both glass and black-box testing. Other modules will be 
+    developed using both glass and black-box testing. Other modules will be
     tested with of user-testing (i.e. testing through the GUI).
-    
+
     This testing approach demonstrates the correctness of the system, as it
     ensures that some untestable features of our system that depend on core,
     testable modules, have dependencies that are functioning as expected. *)
@@ -385,6 +385,17 @@ let mat_mat_prod_tester (out : float array array) (mat1 : float array array)
   ae out prod;
   ae out prod_2
 
+let mat_mat_add_tester (out : float array array) (mat1 : float array array)
+    (mat2 : float array array) =
+  let mat1 = Matrix.init mat1 in
+  let mat2 = Matrix.init mat2 in
+  let sum = Matrix.(mat_mat_add mat1 mat2 |> to_array) in
+  assert_equal
+    ~printer:(fun m ->
+      Printf.sprintf "[| %s |]"
+        (String.concat "; " (Array.to_list (Array.map row_to_string m))))
+    ~msg:"Matrix operation failed." out sum
+
 (** Function to test matrix transpose. *)
 let matrix_transpose_tester (mat : float array array) (out : float array array)
     =
@@ -436,6 +447,12 @@ let mat_tests =
       mat_mat_prod_tester
         [| [| 34.0; 34.0 |]; [| 90.0; 78.0 |]; [| 146.0; 122.0 |] |]
         m3_4 m4_2 );
+    (* Matrix addition tests *)
+    ( "add 2x2 matrices" >:: fun _ ->
+      mat_mat_add_tester
+        [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |] |]
+        [| [| 0.0; 1.0 |]; [| 1.0; 2.0 |] |]
+        [| [| 1.0; 1.0 |]; [| 2.0; 2.0 |] |] );
     (* Matrix transpose test *)
     ( "transpose 3x3 matrix" >:: fun _ ->
       matrix_transpose_tester m3_3
@@ -464,5 +481,10 @@ let mat_tests =
                             PERCEPTRON TEST SUITE
 ==============================================================================*)
 
-let suite = "ocraml test suite" >::: List.flatten [ vec_tests; mat_tests ]
+let perceptron_tests = []
+
+let suite =
+  "ocraml test suite"
+  >::: List.flatten [ vec_tests; mat_tests; perceptron_tests ]
+
 let _ = run_test_tt_main suite

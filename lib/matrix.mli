@@ -7,7 +7,10 @@ val assert_m_v_dim : t -> Vector.t -> unit
 (** Checks if a vector has the same length as the number of rows in a matrix.*)
 
 val assert_m_m_dim : t -> t -> unit
-(** Checks if a two matrices have the same dimensions.*)
+(** Checks if a two matrices have compatible dimensions for multiplying. *)
+
+val assert_m_m_dim_exact : t -> t -> unit
+(** Checks if two matrices have the same dimensions. *)
 
 val init : float array array -> t
 (** Initializes a [Matrix] from a 2D array of floats. *)
@@ -30,6 +33,14 @@ val ( * ) : t -> t -> t
 (** Matrix-matrix product of [Matrix] m1 and [Matrix] m2. Requires: [Matrix] m1
     and [Matrix] m2 have compatible dimensions (i.e. n*m matrix m1 and an m*r
     matrix m2). (Infix)*)
+
+val mat_mat_add : t -> t -> t
+(** Matrix-matrix addition of [Matrix] m1 and [Matrix] m2. Requires: [Matrix] m1
+    and [Matrix] m2 have the same dimensions *)
+
+val ( + ) : t -> t -> t
+(** Matrix-matrix addition of [Matrix] m1 and [Matrix] m2. Requires: [Matrix] m1
+    and [Matrix] m2 have the same dimensions (Infix)*)
 
 val transpose : t -> t
 (** Transpose of [Matrix]*)

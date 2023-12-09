@@ -16,6 +16,10 @@ let assert_m_m_dim (m1 : t) (m2 : t) =
   if num_cols m1 <> num_rows m2 then
     invalid_arg "Matrices have incompatible dimensions for multiplication"
 
+let assert_m_m_dim_exact (m1 : t) (m2 : t) =
+  if num_cols m1 <> num_cols m2 || num_rows m1 <> num_cols m2 then
+    invalid_arg "Matrices are not the same dimension."
+
 (* Multiplies a matrix and a vector. *)
 let mat_vec_prod (mat : t) (vec : Vector.t) =
   assert_m_v_dim mat vec;
@@ -41,8 +45,21 @@ let mat_mat_prod (m1 : t) (m2 : t) =
   done;
   prod
 
+let mat_mat_add (m1 : t) (m2 : t) =
+  assert_m_m_dim_exact m1 m2;
+  let r = num_rows m1 in
+  let c = num_cols m2 in
+  let sum = Array.make_matrix r c 0.0 in
+  for i = 0 to r - 1 do
+    for j = 0 to c - 1 do
+      sum.(i).(j) <- m1.(i).(j) +. m2.(i).(j)
+    done
+  done;
+  sum
+
 let ( @ ) m v = mat_vec_prod m v
 let ( * ) m1 m2 = mat_mat_prod m1 m2
+let ( + ) m1 m2 = mat_mat_add m1 m2
 
 (* Transposes the matrix. *)
 let transpose mat =
@@ -61,7 +78,6 @@ let to_array (m : t) = m
 
 (*Converts a matrix into a string.*)
 let to_string (mat : t) =
-  
   let rows = num_rows mat in
   let cols = num_cols mat in
   let _ = assert (rows != 0 && cols != 0) in
@@ -75,7 +91,5 @@ let to_string (mat : t) =
   in
   "[ " ^ String.concat ";\n" (Array.to_list row_strings) ^ " ]"
 
-
 (*Prints a matrix*)
-let print_mat (mat : t) = 
-  mat |> to_string |> print_endline
+let print_mat (mat : t) = mat |> to_string |> print_endline

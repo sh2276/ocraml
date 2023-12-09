@@ -10,5 +10,5 @@ val predict : Vector.t -> t -> int
 (** [predict inputs perceptron] makes a prediction based on the inputs. 
     Requires: [inputs] has a dimension of nx1 and [perceptron] was created with size n. *)
 
-val update_weights : int -> int -> Vector.t -> t -> t
+val update_weights : float -> int -> Vector.t -> t -> t
 (** [update_weights learning_rate expected actual inputs perceptron] updates the weights of the perceptron based on the error. *)
