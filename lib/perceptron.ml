@@ -69,7 +69,7 @@ module Perceptron : PerceptronType = struct
           * init [| Vector.(inputs |> to_array) |]
           |> transpose)
       in
-      print_endline Matrix.(to_string (m + add_w));
-      print_endline Vector.(to_string (b + error));
+      (* print_endline Matrix.(to_string (m + add_w)); print_endline
+         Vector.(to_string (b + error)); *)
       (Matrix.(m + add_w), Vector.(b + error), f)
 end

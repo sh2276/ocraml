@@ -3,6 +3,7 @@ module W = Widget
 module L = Layout
 module T = Trigger
 open Tsdl
+(* open Ocraml open Bimage *)
 
 let section_title s = L.flat_of_w [ W.label ~size:12 ~fg:Draw.(opaque grey) s ]
 
@@ -13,26 +14,68 @@ let hline width =
 type image_num = { mutable num : int }
 (* type image_name = { mutable name : string } *)
 
-let img_name = ref "./lib/mnist_png/testing/0/3.png"
+let img_name = ref "./none.png"
 
 let _ =
   print_endline
     "Directory format: './[directory from ocraml base folder]/'. Make sure to \
-     include the slash after the directory. "
+     include the slash after the directory."
 
-let _ = print_endline "What directory is your training data in?: "
+let _ =
+  print_endline
+    "What directory is your training data in? (This directory should only have \
+     folders of training data, and each folder's name is the name of the label \
+     of the contents within.) : "
+
 let training_dir = input_line stdin
 let _ = print_endline training_dir
-let _ = print_endline "What directory is your input data in?: "
+
+let _ =
+  print_endline
+    "What directory is your input data in? (This directory should only have \
+     images that you want to run through the model. ): "
+
+(* Get list of input file paths *)
 let input_dir = input_line stdin
 let _ = print_endline input_dir
 let input_dir = if input_dir = "" then "./uploads/" else input_dir
-
-(* module Perceptron = Perceptron *)
-(* let x = Perceptron.create *)
+let _ = print_endline "Loading files..."
 
 let input_files =
   List.map (fun x -> input_dir ^ x) (Array.to_list (Sys.readdir input_dir))
+
+(* Get list of training file paths *)
+(* let train_folders = List.map (fun x -> training_dir ^ x) (Array.to_list
+   (Sys.readdir training_dir)) *)
+
+(* let train_files = List.map (fun x -> List.map (fun y -> x ^ "/" ^ y)
+   (Array.to_list (Sys.readdir x))) train_folders *)
+
+(* Shuffle the list *)
+(* let _ = Random.self_init ()
+
+   let fisher_yates_shuffle arr = let len = Array.length arr in for i = 0 to len
+   - 2 do let j = Random.int (len - i) + i in let temp = arr.(i) in arr.(i) <-
+   arr.(j); arr.(j) <- temp done
+
+   let shuffle_list lst = let arr = Array.of_list lst in fisher_yates_shuffle
+   arr; Array.to_list arr
+
+   let train_files = List.flatten train_files let train_files = shuffle_list
+   train_files let _ = List.map print_string train_files let image_matrix =
+   Loader.to_matrix train_files gray [] let _ = print_endline (string_of_int
+   (Matrix.num_rows image_matrix)) let _ = print_endline (string_of_int
+   (Matrix.num_cols image_matrix)) *)
+
+(* module Perceptron = Perceptron.Perceptron *)
+
+(* let perceptron = Perceptron.create (Matrix.num_cols image_matrix) [ "0"; "1";
+   "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9" ]
+
+   let f x = () let _ = f perceptron *)
+
+(* let train image_matrix = List.iter (fun x -> let _ =
+   Perceptron.update_weights 0.1 x image_matrix) *)
 
 let demo () =
   let _ = List.map print_endline input_files in
@@ -120,6 +163,7 @@ let demo () =
     let bw = W.get_button b in
     let sw = W.get_slider s in
     let state = Button.state bw in
+
     if state then
       let rec loop () =
         let x = Slider.value sw in
@@ -127,7 +171,10 @@ let demo () =
           cur_image.num <- cur_image.num + 1;
           L.set_rooms image_layout [ L.tower_of_w [ image () ] ];
           T.will_exit ev;
-          Button.reset bw)
+          Button.reset bw;
+
+          (* replace with perceptron inference *)
+          print_endline "pressed start computing")
         else (
           Slider.set sw (x + 1);
           set_percent percent (x + 1);
@@ -173,7 +220,27 @@ let demo () =
   let inference_layout =
     L.tower ~margins:0 ~align:Draw.Center [ inference_title ]
   in
-  let page3 = L.tower [ inference_layout; hline width ] in
+
+  (* compute button *)
+  let update c n = W.set_text c (string_of_int n) in
+
+  let out = ref 0 in
+
+  let compute () = incr out in
+
+  let label = W.label "Output Label" in
+  let count = W.label "0" in
+  let action _ =
+    compute ();
+    update count !out;
+    print_endline (string_of_int !out)
+  in
+  let button = W.button ~action "Predict" in
+
+  let page3 =
+    L.tower
+      [ inference_layout; hline width; L.tower_of_w [ label; count; button ] ]
+  in
 
   let tabs =
     Tabs.create ~slide:Avar.Right
