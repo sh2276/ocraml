@@ -1,20 +1,23 @@
 module Class = struct
-  type 'a t = (int * 'a) list
-  (** AF: Association list of keys and classes. RI: The map resulting from the
-      association list must be one-to-one. The set of keys must be from
-      [0, n-1]. *)
+  (** The representation type of a [Class]. *)
+  type 'a t = 'a list
+  (** AF: A map from index to class through a list. RI: List elements must be
+      unique. *)
 
-  (** [create lst] creates a new [Class] with the bindings present in the
-      association list. Requires: [lst] must be a one-to-one mapping from each
-      int to each result. The set of keys must be [0, ..., n-1] where n is the
-      number of distinct results. *)
+  (** [create lst] creates a new [Class] with the list of classes provided. *)
   let create lst = lst
 
-  (** [get classes n] will return the binding with [n] as the key. *)
-  let get lst n = List.assoc n lst
+  (** [get classes n] will return the [n]th class *)
+  let get lst n = List.nth lst n
 
   (** [index classes r] will return the binding with [r] as the result. *)
-  let index lst n = List.find (fun p -> snd p = n) lst |> fst
+  let index lst n =
+    let rec index_aux lst acc =
+      match lst with
+      | [] -> raise (Failure "not found")
+      | h :: t -> if n = h then acc else index_aux t (acc + 1)
+    in
+    index_aux lst 0
 
   (** [num_of_classes] will return the number of classes in a [Class]. *)
   let num_of_classes lst = List.length lst
@@ -23,7 +26,7 @@ end
 module type PerceptronType = sig
   type 'a t
 
-  val create : int -> (int * 'a) list -> 'a t
+  val create : int -> 'a list -> 'a t
   val predict : Vector.t -> 'a t -> 'a
   val update_weights : float -> 'a -> Vector.t -> 'a t -> 'a t
 end
