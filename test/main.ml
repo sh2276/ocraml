@@ -7,8 +7,10 @@
     and processing images.
 
     Math modules will be tested manually. Test cases for math modules will be
-    developed using both glass and black-box testing. Other modules will be
-    tested with of user-testing (i.e. testing through the GUI).
+    developed using both glass and black-box testing. The core perceptron
+    algorithm will be tested using glass box tests on simple logic gates in 
+    order to demonstrate functionality. Other modules will be tested with of 
+    user-testing (i.e. testing through the GUI).
 
     This testing approach demonstrates the correctness of the system, as it
     ensures that some untestable features of our system that depend on core,
