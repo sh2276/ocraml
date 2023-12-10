@@ -424,6 +424,8 @@ let mat_tests =
     (* Matrix-vector multiplication tests *)
     ( "multiply 3x3 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 14.0; 32.0; 50.0 |] m3_3 v3 );
+    ( "multiply 4x2 matrix by vector" >:: fun _ ->
+      mat_vec_prod_tester [| 6.0; 8.0; 8.0; 14.0 |] m4_2 [| 1.0; 2.0 |] );
     (* Matrix-matrix multiplication tests *)
     ( "multiply two matrices" >:: fun _ ->
       mat_mat_prod_tester
@@ -485,13 +487,13 @@ let perceptron_update_test (out : int) (in1 : Vector.t) =
     Perceptron.update_weights 0.2 (Vector.init [| 1.0; 1.0 |]) 1 gate_perceptron
   in
   let prediction = Perceptron.predict in1 result in
-  assert_equal out prediction
+  assert_equal ~printer:string_of_int out prediction
 
 let perceptron_train_test (out : int) (in1 : (Vector.t * int) list)
     (in2 : Vector.t) (p : int Perceptron.t) =
   let result = Perceptron.train 0.2 0. 10 in1 p in
   let prediction = Perceptron.predict in2 result in
-  assert_equal out prediction
+  assert_equal ~printer:string_of_int out prediction
 
 let perceptron_tests =
   [

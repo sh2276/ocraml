@@ -52,8 +52,10 @@ let file_name_to_image_map =
 (* Add labels to each of the files *)
 let train_folders =
   List.map
-    (fun x -> (training_dir ^ x, int_of_string x))
+    (fun x -> (training_dir ^ x, x))
     (Array.to_list (Sys.readdir training_dir))
+
+let train_classes = List.map (fun (_, label) -> label) train_folders
 
 let labeled_train_files =
   List.flatten
@@ -104,8 +106,7 @@ let vector_size =
   in
   Vector.length first_vector
 
-let perceptron =
-  ref (Perceptron.create vector_size [ 0; 1; 2; 3; 4; 5; 6; 7; 8; 9 ])
+let perceptron = ref (Perceptron.create vector_size train_classes)
 
 let demo () =
   let width = 500 in
@@ -204,7 +205,7 @@ let demo () =
 
           (* replace with perceptron inference *)
           print_endline "pressed start computing";
-          perceptron := Perceptron.train 0.2 0. 1 labeled_images !perceptron;
+          perceptron := Perceptron.train 0.2 0. 100 labeled_images !perceptron;
           print_endline "finished training")
         else (
           Slider.set sw (x + 1);
@@ -253,19 +254,19 @@ let demo () =
   in
 
   (* compute button *)
-  let update c n = W.set_text c (string_of_int n) in
+  let update c n = W.set_text c n in
 
-  let prediction = ref (-1) in
+  let prediction = ref "None" in
 
   let label = W.label "Output Label" in
-  let count = W.label (string_of_int !prediction) in
+  let count = W.label !prediction in
   let action _ =
     prediction :=
       Perceptron.predict
         (List.assoc !img_name file_name_to_image_map)
         !perceptron;
     update count !prediction;
-    print_endline (string_of_int !prediction)
+    print_endline !prediction
   in
   let button = W.button ~action "Predict" in
 
