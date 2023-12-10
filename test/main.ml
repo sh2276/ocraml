@@ -618,6 +618,18 @@ let mat_tests =
     ( "convert different 4x2 matrix to array" >:: fun _ ->
       matrix_init_tester m4_2_1 );
     ("convert 3x3 matrix to array" >:: fun _ -> matrix_init_tester m3_3_2);
+    ( "convert 1x1 matrix to array" >:: fun _ ->
+      matrix_init_tester [| [| 1.0 |] |] );
+    ( "convert 2x2 matrix to array" >:: fun _ ->
+      matrix_init_tester [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |] |] );
+    ( "convert 2x2 matrix with negative values to array" >:: fun _ ->
+      matrix_init_tester [| [| -1.0; -2.0 |]; [| -3.0; -4.0 |] |] );
+    ( "convert 3x3 matrix with decimal values to array" >:: fun _ ->
+      matrix_init_tester
+        [| [| 0.1; 0.2; 0.3 |]; [| 0.4; 0.5; 0.6 |]; [| 0.7; 0.8; 0.9 |] |] );
+    ( "convert 3x3 identity matrix to array" >:: fun _ ->
+      matrix_init_tester
+        [| [| 1.0; 0.0; 0.0 |]; [| 0.0; 1.0; 0.0 |]; [| 0.0; 0.0; 1.0 |] |] );
   ]
 
 (*==============================================================================
