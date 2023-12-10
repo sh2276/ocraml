@@ -62,7 +62,7 @@ module Perceptron : PerceptronType = struct
       target.(Class.index f expected) <- 1.0;
       let target_v = Vector.init target in
 
-      let error = Vector.(target_v - b |> ( * ) learning_rate) in
+      let error = Vector.(target_v |> ( * ) learning_rate) in
       let add_w =
         Matrix.(
           ([| Vector.to_array error |] |> init |> transpose)

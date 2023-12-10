@@ -8,8 +8,8 @@
 
     Math modules will be tested manually. Test cases for math modules will be
     developed using both glass and black-box testing. The core perceptron
-    algorithm will be tested using glass box tests on simple logic gates in 
-    order to demonstrate functionality. Other modules will be tested with of 
+    algorithm will be tested using glass box tests on simple logic gates in
+    order to demonstrate functionality. Other modules will be tested with of
     user-testing (i.e. testing through the GUI).
 
     This testing approach demonstrates the correctness of the system, as it
@@ -485,14 +485,14 @@ let loader_tests = []
                             PERCEPTRON TEST SUITE
 ==============================================================================*)
 
-let bool_perceptron = Perceptron.Perceptron.create 2 [ 0; 1 ]
+let bool_perceptron = Perceptron.Perceptron.create 3 [ 0; 1 ]
 
 let and_list =
   [
-    ([| 1.0; 1.0 |], 1);
-    ([| 0.0; 0.0 |], 0);
-    ([| 1.0; 0.0 |], 0);
-    ([| 0.0; 1.0 |], 0);
+    ([| 1.0; 1.0; 1. |], 1);
+    ([| 0.0; 0.0; 1. |], 0);
+    ([| 1.0; 0.0; 1. |], 0);
+    ([| 0.0; 1.0; 1. |], 0);
   ]
 
 let train_n rate lst perceptron =
@@ -508,15 +508,26 @@ let train_n rate lst perceptron =
   in
   train_aux lst perceptron
 
+let perceptron_base_test (out : int) (in1 : Vector.t) =
+  let result =
+    Perceptron.Perceptron.update_weights 0.2 1
+      (Vector.init [| 1.0; 1.0; 1. |])
+      bool_perceptron
+  in
+  let prediction = Perceptron.Perceptron.predict in1 result in
+  assert_equal out prediction
+
 let perceptron_and_test (out : int) (in1 : Vector.t) =
-  let result = train_n 0.1 and_list bool_perceptron in
+  let result = train_n 0.2 and_list bool_perceptron in
   let prediction = Perceptron.Perceptron.predict in1 result in
   assert_equal out prediction
 
 let perceptron_tests =
   [
+    ( "and perceptron1" >:: fun _ ->
+      perceptron_base_test 1 (Vector.init [| 1.0; 1.0; 1.0 |]) );
     ( "and perceptron" >:: fun _ ->
-      perceptron_and_test 1 (Vector.init [| 1.0; 1.0 |]) );
+      perceptron_and_test 1 (Vector.init [| 1.0; 1.0; 1.0 |]) );
   ]
 
 let suite =
