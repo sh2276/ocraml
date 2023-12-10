@@ -38,3 +38,34 @@ let to_vector_list files colortype transformations =
     |> listify_n
   in
   List.map (fun x -> Vector.init (Array.of_list x)) vallistlist
+
+(* gets a list of files in the directory [dir] *)
+let if_names in_dir =
+  List.map (fun x -> in_dir ^ x) (Array.to_list (Sys.readdir in_dir))
+
+(* Shuffle the list *)
+(* Used Fisher-Yates shuffling algorithm to randomize the order of training
+   inputs *)
+let shuffle_list lst =
+  let fisher_yates_shuffle arr =
+    let len = Array.length arr in
+    for i = 0 to len - 2 do
+      let j = Random.int (len - i) + i in
+      let temp = arr.(i) in
+      arr.(i) <- arr.(j);
+      arr.(j) <- temp
+    done in 
+  let arr = Array.of_list lst in
+  fisher_yates_shuffle arr;
+  Array.to_list arr
+
+
+(*labels files in a directory according to the right class *)
+let label_files dir = 
+  List.flatten
+  (List.map
+     (fun (x, label) ->
+       List.map
+         (fun y -> (x ^ "/" ^ y, label))
+         (Array.to_list (Sys.readdir x)))
+     dir)

@@ -39,9 +39,7 @@ let _ =
 let input_dir = input_line stdin
 let _ = print_endline "Loading files..."
 
-let input_file_names =
-  List.map (fun x -> input_dir ^ x) (Array.to_list (Sys.readdir input_dir))
-
+let input_file_names = Loader.if_names input_dir
 let input_images =
   Loader.to_vector_list input_file_names gray [ Expr.invert () ]
 
@@ -57,31 +55,7 @@ let train_folders =
 
 let train_classes = List.map (fun (_, label) -> label) train_folders
 
-let labeled_train_files =
-  List.flatten
-    (List.map
-       (fun (x, label) ->
-         List.map
-           (fun y -> (x ^ "/" ^ y, label))
-           (Array.to_list (Sys.readdir x)))
-       train_folders)
-
-(* Shuffle the list *)
-(* Used Fisher-Yates shuffling algorithm to randomize the order of training
-   inputs *)
-let fisher_yates_shuffle arr =
-  let len = Array.length arr in
-  for i = 0 to len - 2 do
-    let j = Random.int (len - i) + i in
-    let temp = arr.(i) in
-    arr.(i) <- arr.(j);
-    arr.(j) <- temp
-  done
-
-let shuffle_list lst =
-  let arr = Array.of_list lst in
-  fisher_yates_shuffle arr;
-  Array.to_list arr
+let labeled_train_files = Loader.label_files (train_folders)
 
 let unlabeled_train_files = List.map (fun (x, _) -> x) labeled_train_files
 let train_labels = List.map (fun (_, label) -> label) labeled_train_files
@@ -90,7 +64,7 @@ let unlabeled_images =
   Loader.to_vector_list unlabeled_train_files gray [ Expr.invert () ]
 
 let labeled_images =
-  shuffle_list
+  Loader.shuffle_list
     (List.map2
        (fun image label -> (image, label))
        unlabeled_images train_labels)

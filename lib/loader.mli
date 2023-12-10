@@ -46,3 +46,16 @@ val to_vector_list :
     Bimage color type and a list of transformations to output a list of
     [Vector], each of which represents an image loaded with a colortype and
     having the transformations applied to it *)
+
+val if_names : string -> string list
+(** [if_names dir] takes in a string corresponding to a directory and outputs a list of files 
+in that directory *)
+
+val shuffle_list : 'a list -> 'a list
+(** [shuffle_list lst] shuffles a list using the Fisher-Yates shuffling algorithm
+in order to randomize the order of training inputs*)
+
+val label_files : (string * string) list -> (string * string) list
+(* [label_files folders] labels files in a directory with the right class embedding.*)
+
+
