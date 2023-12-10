@@ -167,7 +167,7 @@ let demo () =
 
       (* replace with perceptron inference *)
       print_endline "Start Training";
-      perceptron := Perceptron.train 0.2 0. 1 labeled_images !perceptron;
+      perceptron := Perceptron.train 0.2 0. 1 labeled_images !perceptron |> fst;
       print_endline "Finished Training";
       epoch_count := !epoch_count + 1;
       update epoch_label ("Epochs trained: " ^ string_of_int !epoch_count))

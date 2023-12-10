@@ -74,7 +74,7 @@ let train_once rate lst perceptron =
   in
   train_aux lst perceptron
 
-let margin_of_error lst perceptron =
+let error_rate lst perceptron =
   let rec tally lst acc =
     match lst with
     | [] -> acc
@@ -85,12 +85,14 @@ let margin_of_error lst perceptron =
   tally lst 0. /. (List.length lst |> float_of_int)
 
 let train rate margin num lst perceptron =
-  let rec train_aux num perceptron =
+  let rec train_aux num (perceptron, tabl) =
     match num with
-    | 0 -> perceptron
+    | 0 -> (perceptron, tabl)
     | _ ->
         let newp = train_once rate lst perceptron in
-        let e = margin_of_error lst newp in
-        if e < margin then perceptron else train_aux (num - 1) newp
+        let e = error_rate lst newp in
+        if e < margin then (perceptron, (1. -. e) :: tabl)
+        else train_aux (num - 1) (newp, (1. -. e) :: tabl)
   in
-  train_aux num perceptron
+  let p, t = train_aux num (perceptron, []) in
+  (p, List.rev t)

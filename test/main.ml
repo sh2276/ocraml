@@ -653,12 +653,12 @@ let perceptron_update_test (out : int) (in1 : Vector.t) =
 
 let perceptron_train_test (out : int) (in1 : (Vector.t * int) list)
     (in2 : Vector.t) (p : int Perceptron.t) =
-  let result = Perceptron.train 0.2 0. 10 in1 p in
+  let result = Perceptron.train 0.2 0. 10 in1 p |> fst in
   let prediction = Perceptron.predict in2 result in
   assert_equal ~printer:string_of_int out prediction
 
 let check_xor_linearly_seperable_test _ =
-  let result = Perceptron.train 0.2 0. 10 xor_list gate_perceptron in
+  let result = Perceptron.train 0.2 0. 10 xor_list gate_perceptron |> fst in
   assert_bool "Linearly seperable"
     (List.exists (fun (a, b) -> Perceptron.predict a result <> b) xor_list)
 
