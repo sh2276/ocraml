@@ -467,41 +467,46 @@ let mat_tests =
                             PERCEPTRON TEST SUITE
 ==============================================================================*)
 
-let bool_perceptron = Perceptron.create 2 [ 0; 1 ]
+let bool_perceptron = Perceptron.create 1 [ 0; 1 ]
+let gate_perceptron = Perceptron.create 2 [ 0; 1 ]
+let list_of_bool_vecs = Vector.[ init [| 0. |]; init [| 1. |] ]
 
 let list_of_gate_vecs =
   List.map
     (fun x -> Vector.init x)
     [ [| 1.; 1. |]; [| 0.; 0. |]; [| 0.; 1. |]; [| 1.; 0. |] ]
 
+let not_list = List.combine list_of_bool_vecs [ 1; 0 ]
 let and_list = List.combine list_of_gate_vecs [ 1; 0; 0; 0 ]
 let or_list = List.combine list_of_gate_vecs [ 1; 0; 1; 1 ]
 
 let perceptron_update_test (out : int) (in1 : Vector.t) =
   let result =
-    Perceptron.update_weights 0.2 (Vector.init [| 1.0; 1.0 |]) 1 bool_perceptron
+    Perceptron.update_weights 0.2 (Vector.init [| 1.0; 1.0 |]) 1 gate_perceptron
   in
   let prediction = Perceptron.predict in1 result in
   assert_equal out prediction
 
-let perceptron_and_test (out : int) (in1 : Vector.t) =
-  let result = Perceptron.train 0.2 0. 10 and_list bool_perceptron in
-  let prediction = Perceptron.predict in1 result in
-  assert_equal out prediction
-
-let perceptron_or_test (out : int) (in1 : Vector.t) =
-  let result = Perceptron.train 0.2 0. 10 or_list bool_perceptron in
-  let prediction = Perceptron.predict in1 result in
+let perceptron_train_test (out : int) (in1 : (Vector.t * int) list)
+    (in2 : Vector.t) (p : int Perceptron.t) =
+  let result = Perceptron.train 0.2 0. 10 in1 p in
+  let prediction = Perceptron.predict in2 result in
   assert_equal out prediction
 
 let perceptron_tests =
   [
     ( "perceptron with one update" >:: fun _ ->
       perceptron_update_test 1 (Vector.init [| 1.0; 1.0 |]) );
+    ( "trained not perceptron" >:: fun _ ->
+      perceptron_train_test 1 not_list (Vector.init [| 0. |]) bool_perceptron );
     ( "trained and perceptron" >:: fun _ ->
-      perceptron_and_test 1 (Vector.init [| 1.0; 1.0 |]) );
+      perceptron_train_test 1 and_list
+        (Vector.init [| 1.0; 1.0 |])
+        gate_perceptron );
     ( "trained or perceptron" >:: fun _ ->
-      perceptron_or_test 1 (Vector.init [| 1.0; 0.0 |]) );
+      perceptron_train_test 1 or_list
+        (Vector.init [| 1.0; 0.0 |])
+        gate_perceptron );
   ]
 
 (*==============================================================================

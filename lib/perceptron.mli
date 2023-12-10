@@ -5,7 +5,10 @@ type 'a t
 
 val create : int -> 'a list -> 'a t
 (** [create n lst] will create a [Perceptron] with [n] inputs, and a list of
-    distinct classes *)
+    distinct classes. 
+    
+    Given a variant type [A | B | C], a 4-input perceptron can be created by 
+    calling [create 4 [A; B; C]]. *)
 
 val predict : Vector.t -> 'a t -> 'a
 (** [predict inputs perceptron] makes a prediction based on the inputs.
