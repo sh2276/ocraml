@@ -545,6 +545,27 @@ let mat_tests =
         [| [| 1.1; 2.1 |]; [| 3.1; 4.1 |]; [| 5.1; 6.1 |] |]
         [| [| 0.0; 1.0 |]; [| 1.0; 2.0 |]; [| 2.0; 3.0 |] |]
         [| [| 1.1; 1.1 |]; [| 2.1; 2.1 |]; [| 3.1; 3.1 |] |] );
+    ( "add 2x2 matrices" >:: fun _ ->
+      mat_mat_add_tester
+        [| [| 1.; 2. |]; [| 3.; 4. |] |]
+        [| [| 0.0; 1.0 |]; [| 1.0; 2.0 |] |]
+        [| [| 1.0; 1.0 |]; [| 2.0; 2.0 |] |] );
+    ( "add other 2x2 matrices" >:: fun _ ->
+      mat_mat_add_tester
+        [| [| 1.1; 2.1 |]; [| 3.1; 4.1 |] |]
+        [| [| 0.0; 1.0 |]; [| 1.0; 2.0 |] |]
+        [| [| 1.1; 1.1 |]; [| 2.1; 2.1 |] |] );
+    ( "add 3x3 matrices with positive and negative values" >:: fun _ ->
+      mat_mat_add_tester
+        [| [| 2.; 1.; 8. |]; [| 3.; 14.; 5. |]; [| 20.; -9.; 26. |] |]
+        [| [| 1.0; -2.0; 3.0 |]; [| -4.0; 5.0; -6.0 |]; [| 7.0; -8.0; 9.0 |] |]
+        [| [| 1.0; 3.0; 5.0 |]; [| 7.0; 9.0; 11.0 |]; [| 13.0; -1.0; 17.0 |] |]
+    );
+    ( "add 3x2 matrices with zeros" >:: fun _ ->
+      mat_mat_add_tester
+        [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |]; [| 5.0; 6.0 |] |]
+        [| [| 0.0; 0.0 |]; [| 0.0; 0.0 |]; [| 0.0; 0.0 |] |]
+        [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |]; [| 5.0; 6.0 |] |] );
     (* Matrix transpose test *)
     ( "transpose 3x3 matrix" >:: fun _ ->
       matrix_transpose_tester m3_3
@@ -598,6 +619,18 @@ let mat_tests =
     ( "convert different 4x2 matrix to array" >:: fun _ ->
       matrix_init_tester m4_2_1 );
     ("convert 3x3 matrix to array" >:: fun _ -> matrix_init_tester m3_3_2);
+    ( "convert 1x1 matrix to array" >:: fun _ ->
+      matrix_init_tester [| [| 1.0 |] |] );
+    ( "convert 2x2 matrix to array" >:: fun _ ->
+      matrix_init_tester [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |] |] );
+    ( "convert 2x2 matrix with negative values to array" >:: fun _ ->
+      matrix_init_tester [| [| -1.0; -2.0 |]; [| -3.0; -4.0 |] |] );
+    ( "convert 3x3 matrix with decimal values to array" >:: fun _ ->
+      matrix_init_tester
+        [| [| 0.1; 0.2; 0.3 |]; [| 0.4; 0.5; 0.6 |]; [| 0.7; 0.8; 0.9 |] |] );
+    ( "convert 3x3 identity matrix to array" >:: fun _ ->
+      matrix_init_tester
+        [| [| 1.0; 0.0; 0.0 |]; [| 0.0; 1.0; 0.0 |]; [| 0.0; 0.0; 1.0 |] |] );
   ]
 
 (*==============================================================================
@@ -606,6 +639,7 @@ let mat_tests =
 
 let bool_perceptron = Perceptron.create 1 [ 0; 1 ]
 let gate_perceptron = Perceptron.create 2 [ 0; 1 ]
+let four_perceptron = Perceptron.create 4 [ 0; 1; 2 ]
 let list_of_bool_vecs = Vector.[ init [| 0. |]; init [| 1. |] ]
 
 let list_of_gate_vecs =
@@ -613,11 +647,20 @@ let list_of_gate_vecs =
     (fun x -> Vector.init x)
     [ [| 1.; 1. |]; [| 0.; 0. |]; [| 0.; 1. |]; [| 1.; 0. |] ]
 
+let list_of_four_vecs =
+  List.map
+    (fun x -> Vector.init x)
+    [
+      [| 1.; 1.; 1.; 0. |]; [| 0.; 0.; 1.; 0. |]; [| 0.; 1.; 1.; 0. |];
+      [| 1.; 0.; 0.; 1. |]; [| 1.; 1.; 0.; 1. |]; [| 1.; 0.; 1.; 1. |];
+    ]
+
 let not_list = List.combine list_of_bool_vecs [ 1; 0 ]
 let and_list = List.combine list_of_gate_vecs [ 1; 0; 0; 0 ]
 let or_list = List.combine list_of_gate_vecs [ 1; 0; 1; 1 ]
 let nand_list = List.combine list_of_gate_vecs [ 0; 1; 1; 1 ]
 let xor_list = List.combine list_of_gate_vecs [ 0; 0; 1; 1 ]
+let four_list = List.combine list_of_four_vecs [ 2; 1; 1; 0; 0; 0 ]
 
 let perceptron_update_test (out : int) (in1 : Vector.t) =
   let result =
@@ -655,6 +698,14 @@ let perceptron_tests =
       perceptron_train_test 0 nand_list
         (Vector.init [| 1.0; 1.0 |])
         gate_perceptron );
+    ( "trained 4-vector perceptron" >:: fun _ ->
+      perceptron_train_test 0 four_list
+        (Vector.init [| 1.0; 1.0; 0.0; 1.0 |])
+        four_perceptron );
+    ( "extrapolating on trained 4-vector perceptron" >:: fun _ ->
+      perceptron_train_test 0 four_list
+        (Vector.init [| 1.0; 1.0; 1.0; 1.0 |])
+        four_perceptron );
     ( "xor is not linearly seperable" >:: fun _ ->
       check_xor_linearly_seperable_test () );
   ]
@@ -680,15 +731,22 @@ let loader_list_test (out : Vector.t list) (in1 : string list)
 (* Ocaml Sys doesn't read lists in alphabetical order so we need a comparison
    function to see if lists have the same elements *)
 
-let rec compare_lists a b acc : bool =
-  match a with
-  | [] -> acc
-  | h :: t -> List.mem h b && acc
+let compare_lists a b =
+  let rec compare_lists_aux a b acc : bool =
+    match a with
+    | [] -> acc
+    | h :: t -> List.mem h b && acc
+  in
+  compare_lists_aux a b true
 
 let loader_if_names_test (out : string list) (in1 : string) =
   assert_bool "all elements of either list don't exist in the other"
-    (compare_lists out (Loader.if_names in1) true
-    && compare_lists (Loader.if_names in1) out true)
+    (compare_lists out (Loader.if_names in1)
+    && compare_lists (Loader.if_names in1) out)
+
+let shuffle_test (in1 : string list) =
+  assert_bool "shuffle doesn't return the same elements"
+    (compare_lists in1 (Loader.shuffle_list in1))
 
 let loader_tests =
   [
@@ -729,6 +787,10 @@ let loader_tests =
           "./test/testtrain/6";
         ]
         "./test/testtrain/" );
+    ("shuffle single element" >:: fun _ -> shuffle_test [ "test" ]);
+    ("shuffle two elements" >:: fun _ -> shuffle_test [ "test1"; "test2" ]);
+    ( "shuffle multi-element list" >:: fun _ ->
+      shuffle_test [ "a"; "b"; "c"; "d"; "e"; "f"; "g" ] );
   ]
 
 let suite =
