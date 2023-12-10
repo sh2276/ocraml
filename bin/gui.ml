@@ -35,14 +35,20 @@ let _ =
     "What directory is your input data in? (This directory should only have \
      images that you want to run through the model. ): "
 
-(* Get list of input file paths *)
+(* Get list of input file paths and make a list of input image vectors*)
 let input_dir = input_line stdin
 let _ = print_endline "Loading files..."
 
 let input_file_names =
   List.map (fun x -> input_dir ^ x) (Array.to_list (Sys.readdir input_dir))
 
-(* Get list of training file paths *)
+let input_images =
+  Loader.to_vector_list input_file_names gray [ Expr.invert () ]
+
+let file_name_to_image_map =
+  List.map2 (fun name image -> (name, image)) input_file_names input_images
+
+(* Get list of training file paths and make a list of labeled image vectors *)
 (* Add labels to each of the files *)
 let train_folders =
   List.map
@@ -76,33 +82,34 @@ let shuffle_list lst =
   Array.to_list arr
 
 let unlabeled_train_files = List.map (fun (x, _) -> x) labeled_train_files
+let train_labels = List.map (fun (_, label) -> label) labeled_train_files
 
 let unlabeled_images =
   Loader.to_vector_list unlabeled_train_files gray [ Expr.invert () ]
 
-(* let _ = print_endline (string_of_int (Matrix.num_rows image_matrix)) let _ =
-   print_endline (string_of_int (Matrix.num_cols image_matrix)) *)
+let labeled_images =
+  shuffle_list
+    (List.map2
+       (fun image label -> (image, label))
+       unlabeled_images train_labels)
+
+(* Initialize perceptron *)
+exception BadTrainSet of string
+
+let vector_size =
+  let first_vector =
+    match unlabeled_images with
+    | h :: _ -> h
+    | [] -> raise (BadTrainSet "first image is empty")
+  in
+  Vector.length first_vector
+
+module Perceptron = Perceptron
 
 let perceptron =
-  Perceptron.create
-    (Matrix.num_cols image_matrix)
-    [ 0; 1; 2; 3; 4; 5; 6; 7; 8; 9 ]
-
-let train_n rate lst perceptron =
-  let rec train_aux lst acc =
-    match lst with
-    | [] -> acc
-    | (v, e) :: t ->
-        let newp =
-          print_endline (string_of_int e);
-          Perceptron.update_weights rate e (Vector.init v) acc
-        in
-        train_aux t newp
-  in
-  train_aux lst perceptron
+  ref (Perceptron.create vector_size [ 0; 1; 2; 3; 4; 5; 6; 7; 8; 9 ])
 
 let demo () =
-  let _ = List.map print_endline input_files in
   let width = 500 in
 
   (* Page 1: Upload Image *)
@@ -151,7 +158,7 @@ let demo () =
 
   (* W.button button_str in *)
   let make_list file_names = List.map make_button file_names in
-  let buttons_and_connections = make_list input_files in
+  let buttons_and_connections = make_list input_file_names in
   let input_button_list = List.map fst buttons_and_connections in
   let input_c_button_list = List.map snd buttons_and_connections in
 
@@ -198,12 +205,14 @@ let demo () =
           Button.reset bw;
 
           (* replace with perceptron inference *)
-          print_endline "pressed start computing")
+          print_endline "pressed start computing";
+          perceptron := Perceptron.train_epoch 0.2 1 labeled_images !perceptron;
+          print_endline "finished training")
         else (
           Slider.set sw (x + 1);
           set_percent percent (x + 1);
           W.update s;
-          T.nice_delay ev 0.1;
+          T.nice_delay ev 0.05;
           loop ())
       in
       loop ()
@@ -248,16 +257,17 @@ let demo () =
   (* compute button *)
   let update c n = W.set_text c (string_of_int n) in
 
-  let out = ref 0 in
-
-  let compute () = incr out in
+  let prediction = ref (-1) in
 
   let label = W.label "Output Label" in
   let count = W.label "0" in
   let action _ =
-    compute ();
-    update count !out;
-    print_endline (string_of_int !out)
+    prediction :=
+      Perceptron.predict
+        (List.assoc !img_name file_name_to_image_map)
+        !perceptron;
+    update count !prediction;
+    print_endline (string_of_int !prediction)
   in
   let button = W.button ~action "Predict" in
 

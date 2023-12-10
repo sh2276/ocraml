@@ -45,6 +45,10 @@ let vallistlist_to_stringlistlist (val_listlist : 'a list list) =
    to_matrix files colortype transformations in let _ = print_endline "files
    loaded" in out *)
 
+(** [to_vector_list filelist color [transformations]] converts a list of file
+    paths relative to the root of the project to a list of vectors that
+    represent each image after being read with the color and after having the
+    transformations applied to each. *)
 let to_vector_list files colortype transformations =
   let vallistlist =
     files_to_imglist colortype files
