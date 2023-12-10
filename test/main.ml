@@ -626,6 +626,7 @@ let mat_tests =
 
 let bool_perceptron = Perceptron.create 1 [ 0; 1 ]
 let gate_perceptron = Perceptron.create 2 [ 0; 1 ]
+let four_perceptron = Perceptron.create 4 [ 0; 1; 2 ]
 let list_of_bool_vecs = Vector.[ init [| 0. |]; init [| 1. |] ]
 
 let list_of_gate_vecs =
@@ -633,11 +634,20 @@ let list_of_gate_vecs =
     (fun x -> Vector.init x)
     [ [| 1.; 1. |]; [| 0.; 0. |]; [| 0.; 1. |]; [| 1.; 0. |] ]
 
+let list_of_four_vecs =
+  List.map
+    (fun x -> Vector.init x)
+    [
+      [| 1.; 1.; 1.; 0. |]; [| 0.; 0.; 1.; 0. |]; [| 0.; 1.; 1.; 0. |];
+      [| 1.; 0.; 0.; 1. |]; [| 1.; 1.; 0.; 1. |]; [| 1.; 0.; 1.; 1. |];
+    ]
+
 let not_list = List.combine list_of_bool_vecs [ 1; 0 ]
 let and_list = List.combine list_of_gate_vecs [ 1; 0; 0; 0 ]
 let or_list = List.combine list_of_gate_vecs [ 1; 0; 1; 1 ]
 let nand_list = List.combine list_of_gate_vecs [ 0; 1; 1; 1 ]
 let xor_list = List.combine list_of_gate_vecs [ 0; 0; 1; 1 ]
+let four_list = List.combine list_of_four_vecs [ 2; 1; 1; 0; 0; 0 ]
 
 let perceptron_update_test (out : int) (in1 : Vector.t) =
   let result =
@@ -675,6 +685,14 @@ let perceptron_tests =
       perceptron_train_test 0 nand_list
         (Vector.init [| 1.0; 1.0 |])
         gate_perceptron );
+    ( "trained 4-vector perceptron" >:: fun _ ->
+      perceptron_train_test 0 four_list
+        (Vector.init [| 1.0; 1.0; 0.0; 1.0 |])
+        four_perceptron );
+    ( "extrapolating on trained 4-vector perceptron" >:: fun _ ->
+      perceptron_train_test 0 four_list
+        (Vector.init [| 1.0; 1.0; 1.0; 1.0 |])
+        four_perceptron );
     ( "xor is not linearly seperable" >:: fun _ ->
       check_xor_linearly_seperable_test () );
   ]
