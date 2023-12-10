@@ -524,7 +524,7 @@ let mat_tests =
     ( "multiply different 3x3 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 5.0; 4.0; 3.0 |] m3_3_2 v3 );
     ( "multiply different 3x3 matrix by zero vector" >:: fun _ ->
-      mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_3_2 [| 0.0; 0.0; 0.0 |]);
+      mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_3_2 [| 0.0; 0.0; 0.0 |] );
     ( "multiply 3x4 matrix by a 3x4 zero-vector" >:: fun _ ->
       mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_4 v4 );
     ( "multiply 3x4 matrix by a 3x4 non zero-vector" >:: fun _ ->
@@ -680,6 +680,19 @@ let loader_test (out : Vector.t list) (in1 : string list)
   let x = Loader.to_vector_list in1 Bimage.gray trans in
   assert_equal ~printer:(pp_list Vector.to_string) out x
 
+(* Ocaml Sys doesn't read lists in alphabetical order so we need a comparison
+   function to see if lists have the same elements *)
+
+let rec compare_lists a b acc : bool =
+  match a with
+  | [] -> acc
+  | h :: t -> List.mem h b && acc
+
+let loader_if_names_test (out : string list) (in1 : string) =
+  assert_bool "all elements of either list don't exist in the other"
+    (compare_lists out (Loader.if_names in1) true
+    && compare_lists (Loader.if_names in1) out true)
+
 let loader_tests =
   [
     ( "loader with one pixel" >:: fun _ ->
@@ -697,6 +710,30 @@ let loader_tests =
         Vector.[ init [| 0.; 0.; 1.; 0. |]; init [| 0. |] ]
         [ "./test/2x2.png"; "./test/1x1.png" ]
         [] );
+    ( "if_names on a mock input directory" >:: fun _ ->
+      loader_if_names_test
+        [
+          "./test/testinput/0.png";
+          "./test/testinput/1.png";
+          "./test/testinput/2.png";
+          "./test/testinput/3.png";
+          "./test/testinput/4.png";
+          "./test/testinput/5.png";
+          "./test/testinput/6.png";
+        ]
+        "./test/testinput/" );
+    ( "if_names on a mock train directory" >:: fun _ ->
+      loader_if_names_test
+        [
+          "./test/testtrain/0";
+          "./test/testtrain/1";
+          "./test/testtrain/2";
+          "./test/testtrain/3";
+          "./test/testtrain/4";
+          "./test/testtrain/5";
+          "./test/testtrain/6";
+        ]
+        "./test/testtrain/" );
   ]
 
 let suite =
