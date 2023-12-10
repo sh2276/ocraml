@@ -95,45 +95,14 @@ let v10 = [| 0.1; 0.2; 0.3; 0.4; 0.5; 0.6; 0.7; 0.8; 0.9; 1.0 |]
 
 let v15 =
   [|
-    -1.0;
-    -2.0;
-    -3.0;
-    -4.0;
-    -5.0;
-    0.0;
-    1.0;
-    2.0;
-    3.0;
-    4.0;
-    5.0;
-    0.0;
-    -1.0;
-    -2.0;
+    -1.0; -2.0; -3.0; -4.0; -5.0; 0.0; 1.0; 2.0; 3.0; 4.0; 5.0; 0.0; -1.0; -2.0;
     -3.0;
   |]
 
 let v20 =
   [|
-    2.5;
-    3.5;
-    4.5;
-    5.5;
-    6.5;
-    7.5;
-    8.5;
-    9.5;
-    10.5;
-    11.5;
-    12.5;
-    13.5;
-    14.5;
-    15.5;
-    16.5;
-    17.5;
-    18.5;
-    19.5;
-    20.5;
-    21.5;
+    2.5; 3.5; 4.5; 5.5; 6.5; 7.5; 8.5; 9.5; 10.5; 11.5; 12.5; 13.5; 14.5; 15.5;
+    16.5; 17.5; 18.5; 19.5; 20.5; 21.5;
   |]
 
 let v5_2 = [| 0.5; 1.5; 2.5; 3.5; 4.5 |]
@@ -143,26 +112,8 @@ let v10_3 = [| 0.01; 0.02; 0.03; 0.04; 0.05; 0.06; 0.07; 0.08; 0.09; 0.1 |]
 
 let v20_2 =
   [|
-    1.0;
-    2.0;
-    3.0;
-    4.0;
-    5.0;
-    6.0;
-    7.0;
-    8.0;
-    9.0;
-    10.0;
-    11.0;
-    12.0;
-    13.0;
-    14.0;
-    15.0;
-    16.0;
-    17.0;
-    18.0;
-    19.0;
-    20.0;
+    1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0; 8.0; 9.0; 10.0; 11.0; 12.0; 13.0; 14.0;
+    15.0; 16.0; 17.0; 18.0; 19.0; 20.0;
   |]
 
 (** Vector test cases *)
@@ -204,26 +155,8 @@ let vec_tests =
     ( " add two vectors of length 20" >:: fun _ ->
       vector_a_s_tester
         [|
-          5.;
-          7.;
-          9.;
-          11.;
-          13.;
-          15.;
-          17.;
-          19.;
-          21.;
-          23.;
-          25.;
-          27.;
-          29.;
-          31.;
-          33.;
-          35.;
-          37.;
-          39.;
-          41.;
-          43.;
+          5.; 7.; 9.; 11.; 13.; 15.; 17.; 19.; 21.; 23.; 25.; 27.; 29.; 31.;
+          33.; 35.; 37.; 39.; 41.; 43.;
         |]
         v20 v20 Vector.add );
     ( " add two vectors of length 5 with different values" >:: fun _ ->
@@ -249,8 +182,7 @@ let vec_tests =
         [| 1.; 2.; 3.; -4.; -5.; -6. |]
         [| 1.0; 2.0; 3.0; -4.0; -5.0; -6.0 |]
         [| 0.0; 0.0; 0.0; 0.0; 0.0; 0.0 |]
-        Vector.add );
-    (*vector subtraction tests*)
+        Vector.add ); (*vector subtraction tests*)
     ( " subtract two empty vectors" >:: fun _ ->
       vector_a_s_tester [||] [||] [||] Vector.sub );
     ( " subtract two vectors of length 5" >:: fun _ ->
@@ -266,26 +198,8 @@ let vec_tests =
     ( " subtract two vectors of length 20" >:: fun _ ->
       vector_a_s_tester
         [|
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
-          1.5;
+          1.5; 1.5; 1.5; 1.5; 1.5; 1.5; 1.5; 1.5; 1.5; 1.5; 1.5; 1.5; 1.5; 1.5;
+          1.5; 1.5; 1.5; 1.5; 1.5; 1.5;
         |]
         v20 v20_2 Vector.sub );
     ( " subtract two vectors of length 5 with different values" >:: fun _ ->
@@ -308,8 +222,7 @@ let vec_tests =
         [| 4.; 8.; 12.; -16.; -20.; -24. |]
         [| 1.0; 2.0; 3.0; -4.0; -5.0; -6.0 |]
         [| -3.0; -6.0; -9.0; 12.0; 15.0; 18.0 |]
-        Vector.sub );
-    (*vector scalar multiplication tests*)
+        Vector.sub ); (*vector scalar multiplication tests*)
     ( " multiply empty vector by 0.0" >:: fun _ ->
       vector_s_mult_tester [||] 0.0 [||] );
     ( " multiply vector of length 5 by 2.0" >:: fun _ ->
@@ -317,24 +230,10 @@ let vec_tests =
     ( " multiply vector of length 15 by 0.5" >:: fun _ ->
       vector_s_mult_tester
         [|
-          -0.5;
-          -1.0;
-          -1.5;
-          -2.0;
-          -2.5;
-          0.0;
-          0.5;
-          1.0;
-          1.5;
-          2.0;
-          2.5;
-          0.0;
-          -0.5;
-          -1.0;
-          -1.5;
+          -0.5; -1.0; -1.5; -2.0; -2.5; 0.0; 0.5; 1.0; 1.5; 2.0; 2.5; 0.0; -0.5;
+          -1.0; -1.5;
         |]
-        0.5 v15 );
-    (* vector dot product tests *)
+        0.5 v15 ); (* vector dot product tests *)
     ( "dot product of two singleton vectors" >:: fun _ ->
       vector_dprod_tester 0.0 [| 0.0 |] [| 0.0 |] );
     ( "dot product of two singleton vectors" >:: fun _ ->
@@ -346,8 +245,7 @@ let vec_tests =
     ( "dot product of two length 15 vectors" >:: fun _ ->
       vector_dprod_tester 124.0 v15 v15 );
     ( "dot product of two length 20 vectors" >:: fun _ ->
-      vector_dprod_tester 3185.0 v20 v20_2 );
-    (* vector length tests *)
+      vector_dprod_tester 3185.0 v20 v20_2 ); (* vector length tests *)
     ("length of empty vector" >:: fun _ -> vector_length_tester [||]);
     ("length of vector of length 5" >:: fun _ -> vector_length_tester v5);
     ("length of vector of length 10" >:: fun _ -> vector_length_tester v10);
@@ -362,8 +260,7 @@ let vec_tests =
     ( "length of vector of length 5 with negative values" >:: fun _ ->
       vector_length_tester v5_3 );
     ( "length of vector of length 10 with negative values" >:: fun _ ->
-      vector_length_tester v10_3 );
-    (* vector argmax tests *)
+      vector_length_tester v10_3 ); (* vector argmax tests *)
     ("argmax of vector of length 5" >:: fun _ -> vector_argmax_tester 4 v5);
     ("argmax of vector of length 10" >:: fun _ -> vector_argmax_tester 9 v10);
     ( "argmax of vector of length 15 with negative values" >:: fun _ ->
@@ -460,8 +357,7 @@ let m3_3_2 = [| [| 2.0; 0.0; 1.0 |]; [| 1.0; 0.0; 1.0 |]; [| 1.0; 1.0; 0.0 |] |]
 
 let m3_4 =
   [|
-    [| 1.0; 2.0; 3.0; 4.0 |];
-    [| 5.0; 6.0; 7.0; 8.0 |];
+    [| 1.0; 2.0; 3.0; 4.0 |]; [| 5.0; 6.0; 7.0; 8.0 |];
     [| 9.0; 10.0; 11.0; 12.0 |];
   |]
 
@@ -517,8 +413,7 @@ let mat_tests =
       matrix_dim_tester
         (Matrix.to_array
            (Matrix.mat_mat_prod (Matrix.init m3_3) (Matrix.init m3_3)))
-        3 3 );
-    (* Matrix-vector multiplication tests *)
+        3 3 ); (* Matrix-vector multiplication tests *)
     ( "multiply 3x3 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 14.0; 32.0; 50.0 |] m3_3 v3 );
     ( "multiply different 3x3 matrix by vector" >:: fun _ ->
@@ -539,8 +434,7 @@ let mat_tests =
     ( "multiply 3*4 and 4*2 matrix" >:: fun _ ->
       mat_mat_prod_tester
         [| [| 34.0; 34.0 |]; [| 90.0; 78.0 |]; [| 146.0; 122.0 |] |]
-        m3_4 m4_2 );
-    (* Matrix addition tests *)
+        m3_4 m4_2 ); (* Matrix addition tests *)
     ( "add 2x2 matrices" >:: fun _ ->
       mat_mat_add_tester
         [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |] |]
@@ -566,9 +460,7 @@ let mat_tests =
     ( "transpose 3x4 matrix m3_4" >:: fun _ ->
       matrix_transpose_tester m3_4
         [|
-          [| 1.0; 5.0; 9.0 |];
-          [| 2.0; 6.0; 10.0 |];
-          [| 3.0; 7.0; 11.0 |];
+          [| 1.0; 5.0; 9.0 |]; [| 2.0; 6.0; 10.0 |]; [| 3.0; 7.0; 11.0 |];
           [| 4.0; 8.0; 12.0 |];
         |] );
     ( "transpose 4x2 matrix m4_2" >:: fun _ ->
@@ -577,46 +469,34 @@ let mat_tests =
     ( "transpose zero 3x4 matrix" >:: fun _ ->
       matrix_transpose_tester
         [|
-          [| 0.0; 0.0; 0.0; 0.0 |];
-          [| 0.0; 0.0; 0.0; 0.0 |];
+          [| 0.0; 0.0; 0.0; 0.0 |]; [| 0.0; 0.0; 0.0; 0.0 |];
           [| 0.0; 0.0; 0.0; 0.0 |];
         |]
         [|
-          [| 0.0; 0.0; 0.0 |];
-          [| 0.0; 0.0; 0.0 |];
-          [| 0.0; 0.0; 0.0 |];
+          [| 0.0; 0.0; 0.0 |]; [| 0.0; 0.0; 0.0 |]; [| 0.0; 0.0; 0.0 |];
           [| 0.0; 0.0; 0.0 |];
         |] );
     ( "transpose identity 4x4 matrix" >:: fun _ ->
       matrix_transpose_tester
         [|
-          [| 1.0; 0.0; 0.0; 0.0 |];
-          [| 0.0; 1.0; 0.0; 0.0 |];
-          [| 0.0; 0.0; 1.0; 0.0 |];
-          [| 0.0; 0.0; 0.0; 1.0 |];
+          [| 1.0; 0.0; 0.0; 0.0 |]; [| 0.0; 1.0; 0.0; 0.0 |];
+          [| 0.0; 0.0; 1.0; 0.0 |]; [| 0.0; 0.0; 0.0; 1.0 |];
         |]
         [|
-          [| 1.0; 0.0; 0.0; 0.0 |];
-          [| 0.0; 1.0; 0.0; 0.0 |];
-          [| 0.0; 0.0; 1.0; 0.0 |];
-          [| 0.0; 0.0; 0.0; 1.0 |];
+          [| 1.0; 0.0; 0.0; 0.0 |]; [| 0.0; 1.0; 0.0; 0.0 |];
+          [| 0.0; 0.0; 1.0; 0.0 |]; [| 0.0; 0.0; 0.0; 1.0 |];
         |] );
     ( "transpose 4x5 matrix" >:: fun _ ->
       matrix_transpose_tester
         [|
-          [| 1.; 0.; 0.; 1.; 1. |];
-          [| 0.; 1.; 0.; 0.; 0. |];
-          [| 1.; 0.; 1.; 0.; 0. |];
-          [| 0.; 0.; 1.; 1.; 0. |];
+          [| 1.; 0.; 0.; 1.; 1. |]; [| 0.; 1.; 0.; 0.; 0. |];
+          [| 1.; 0.; 1.; 0.; 0. |]; [| 0.; 0.; 1.; 1.; 0. |];
         |]
         [|
-          [| 1.0; 0.0; 1.0; 0.0 |];
-          [| 0.0; 1.0; 0.0; 0.0 |];
-          [| 0.0; 0.0; 1.0; 1.0 |];
-          [| 1.0; 0.0; 0.0; 1.0 |];
+          [| 1.0; 0.0; 1.0; 0.0 |]; [| 0.0; 1.0; 0.0; 0.0 |];
+          [| 0.0; 0.0; 1.0; 1.0 |]; [| 1.0; 0.0; 0.0; 1.0 |];
           [| 1.0; 0.0; 0.0; 0.0 |];
-        |] );
-    (* Conversion to array test *)
+        |] ); (* Conversion to array test *)
     ("convert 3x3 matrix to array" >:: fun _ -> matrix_init_tester m3_3);
     ("convert 3x4 matrix to array" >:: fun _ -> matrix_init_tester m3_4);
     ("convert 4x2 matrix to array" >:: fun _ -> matrix_init_tester m4_2);
