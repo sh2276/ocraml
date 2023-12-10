@@ -66,9 +66,3 @@ val to_array : t -> float array array
 
 val to_vector_list : t -> Vector.t list
 (** Convert a [Matrix] to a list of [Vector] *)
-
-val to_string : t -> string
-(**Convert a [Matrix] into a string for debug and printing purposes.*)
-
-val print_mat : t -> unit
-(**Print a [Matrix] for debug and testing purposes.*)

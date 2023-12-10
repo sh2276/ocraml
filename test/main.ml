@@ -228,6 +228,28 @@ let vec_tests =
         v20 v20 Vector.add );
     ( " add two vectors of length 5 with different values" >:: fun _ ->
       vector_a_s_tester [| 1.5; 3.5; 5.5; 7.5; 9.5 |] v5 v5_2 Vector.add );
+    (* vector addition tests *)
+    ( "add two vectors of length 2" >:: fun _ ->
+      vector_a_s_tester [| 2.5; 5.5 |] [| 0.5; 1.5 |] [| 2.0; 4.0 |] Vector.add
+    );
+    ( "add two vectors of length 3" >:: fun _ ->
+      vector_a_s_tester [| 2.0; 5.0; 8.0 |] [| 0.5; 1.5; 2.5 |]
+        [| 1.5; 3.5; 5.5 |] Vector.add );
+    ( "add two vectors of length 4" >:: fun _ ->
+      vector_a_s_tester [| 0.4; 0.8; 1.2; 1.6 |] [| 0.1; 0.2; 0.3; 0.4 |]
+        [| 0.3; 0.6; 0.9; 1.2 |] Vector.add );
+    ( "add two vectors of length 5" >:: fun _ ->
+      vector_a_s_tester
+        [| 4.; 8.; 12.; 16.; 20. |]
+        [| 1.0; 2.0; 3.0; 4.0; 5.0 |]
+        [| 3.0; 6.0; 9.0; 12.0; 15.0 |]
+        Vector.add );
+    ( "add two vectors of length 6" >:: fun _ ->
+      vector_a_s_tester
+        [| 1.; 2.; 3.; -4.; -5.; -6. |]
+        [| 1.0; 2.0; 3.0; -4.0; -5.0; -6.0 |]
+        [| 0.0; 0.0; 0.0; 0.0; 0.0; 0.0 |]
+        Vector.add );
     (*vector subtraction tests*)
     ( " subtract two empty vectors" >:: fun _ ->
       vector_a_s_tester [||] [||] [||] Vector.sub );
@@ -268,6 +290,25 @@ let vec_tests =
         v20 v20_2 Vector.sub );
     ( " subtract two vectors of length 5 with different values" >:: fun _ ->
       vector_a_s_tester [| -0.5; -0.5; -0.5; -0.5; -0.5 |] v5_2 v5 Vector.sub );
+    (* vector subtraction tests *)
+    ( "subtract two vectors of length 2" >:: fun _ ->
+      vector_a_s_tester [| 1.0; 4.5 |] [| 1.5; 3.0 |] [| 0.5; -1.5 |] Vector.sub
+    );
+    ( "subtract two vectors of length 3" >:: fun _ ->
+      vector_a_s_tester [| 0.5; 2.5; 3.5 |] [| 1.0; 1.5; 2.0 |]
+        [| 0.5; -1.0; -1.5 |] Vector.sub );
+    ( "subtract two vectors of length 5" >:: fun _ ->
+      vector_a_s_tester
+        [| 3.0; 6.0; 9.0; 12.0; 15.0 |]
+        [| 1.0; 2.0; 3.0; 4.0; 5.0 |]
+        [| -2.0; -4.0; -6.0; -8.0; -10.0 |]
+        Vector.sub );
+    ( "subtract two vectors of length 6" >:: fun _ ->
+      vector_a_s_tester
+        [| 4.; 8.; 12.; -16.; -20.; -24. |]
+        [| 1.0; 2.0; 3.0; -4.0; -5.0; -6.0 |]
+        [| -3.0; -6.0; -9.0; 12.0; 15.0; 18.0 |]
+        Vector.sub );
     (*vector scalar multiplication tests*)
     ( " multiply empty vector by 0.0" >:: fun _ ->
       vector_s_mult_tester [||] 0.0 [||] );
@@ -294,6 +335,8 @@ let vec_tests =
         |]
         0.5 v15 );
     (* vector dot product tests *)
+    ( "dot product of two singleton vectors" >:: fun _ ->
+      vector_dprod_tester 0.0 [| 0.0 |] [| 0.0 |] );
     ( "dot product of two singleton vectors" >:: fun _ ->
       vector_dprod_tester 1.0 [| 1.0 |] [| 1.0 |] );
     ( "dot product of two length 5 vectors" >:: fun _ ->
@@ -329,6 +372,10 @@ let vec_tests =
       vector_argmax_tester 0 [| 1.; 1. |] );
     ( "argmax of zero vector" >:: fun _ ->
       vector_argmax_tester 0 [| 0.; 0.; 0.; 0.; 0.; 0.; 0. |] );
+    ( "argmax of vector with first and last values negative" >:: fun _ ->
+      vector_argmax_tester 1 [| -1.; 0.; 0.; 0.; 0.; 0.; -1. |] );
+    ( "argmax of vector with all but one value negative " >:: fun _ ->
+      vector_argmax_tester 5 [| -1.; -1.; -1.; -1.; -1.; 0.; -1. |] );
   ]
 
 (*==============================================================================
@@ -436,8 +483,23 @@ let mat_tests =
     ("initalize non square matrix" >:: fun _ -> matrix_init_tester m4_2);
     ( "initalize different non square matrix" >:: fun _ ->
       matrix_init_tester m4_2_1 );
+    ("initialize 1x1 matrix" >:: fun _ -> matrix_init_tester [| [| 1.0 |] |]);
+    ( "initialize 2x2 matrix" >:: fun _ ->
+      matrix_init_tester [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |] |] );
+    ( "initialize another 3x3 matrix" >:: fun _ ->
+      matrix_init_tester
+        [| [| 1.0; 2.0; 3.0 |]; [| 4.0; 5.0; 6.0 |]; [| 7.0; 8.0; 9.0 |] |] );
     (* Matrix dimensions test *)
-    ("check 3x3 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_3 3 3);
+    ( "check 1x1 matrix dimensions" >:: fun _ ->
+      matrix_dim_tester [| [| 1.0 |] |] 1 1 );
+    ( "check 2x2 matrix dimensions" >:: fun _ ->
+      matrix_dim_tester [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |] |] 2 2 );
+    ( "check 3x3 matrix dimensions" >:: fun _ ->
+      matrix_dim_tester
+        [| [| 1.0; 2.0; 3.0 |]; [| 4.0; 5.0; 6.0 |]; [| 7.0; 8.0; 9.0 |] |]
+        3 3 );
+    ( "check another 3x3 matrix dimensions" >:: fun _ ->
+      matrix_dim_tester m3_3 3 3 );
     ("check 3x4 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_4 3 4);
     ("check 4x2 matrix dimensions" >:: fun _ -> matrix_dim_tester m4_2 4 2);
     ("check 4x2 matrix dimensions" >:: fun _ -> matrix_dim_tester m4_2_1 4 2);
@@ -549,69 +611,6 @@ let mat_tests =
           [| 0.0; 0.0; 1.0; 1.0 |];
           [| 1.0; 0.0; 0.0; 1.0 |];
           [| 1.0; 0.0; 0.0; 0.0 |];
-        |] );
-    ( "transpose 10x10 matrix" >:: fun _ ->
-      matrix_transpose_tester
-        [|
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1. |];
-        |]
-        [|
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-        |] );
-    ( "transpose 15x15 matrix (scale)" >:: fun _ ->
-      matrix_transpose_tester
-        [|
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-          [| 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1.; 1. |];
-        |]
-        [|
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
-          [| 1.; 0.; 0.; 1.; 1.; 1.; 0.; 1.; 0.; 1.; 1.; 0.; 0.; 1.; 1. |];
         |] );
     (* Conversion to array test *)
     ("convert 3x3 matrix to array" >:: fun _ -> matrix_init_tester m3_3);

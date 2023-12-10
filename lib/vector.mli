@@ -55,6 +55,3 @@ val argmax : t -> int
 
 val to_string : t -> string
 (**Convert a [Vector] into a string for debug and printing purposes.*)
-
-val print_vec : t -> unit
-(**Print a [Vector] for debug and testing purposes.*)

@@ -78,21 +78,3 @@ let to_array (m : t) = m
 
 (* Converts a matrix to a list of vectors *)
 let to_vector_list (m : t) = List.map (fun x -> Vector.init x) (Array.to_list m)
-
-(*Converts a matrix into a string.*)
-let to_string (mat : t) =
-  let rows = num_rows mat in
-  let cols = num_cols mat in
-  let _ = assert (rows != 0 && cols != 0) in
-  let row_strings =
-    Array.init rows (fun i ->
-        let row = mat.(i) in
-        let row_str =
-          Array.map string_of_float row |> Array.to_list |> String.concat "; "
-        in
-        "[ " ^ row_str ^ " ]")
-  in
-  "[ " ^ String.concat ";\n" (Array.to_list row_strings) ^ " ]"
-
-(*Prints a matrix*)
-let print_mat (mat : t) = mat |> to_string |> print_endline
