@@ -1,4 +1,9 @@
-(** Module to represent vectors and their related operations. *)
+(** Module to represent vectors and their related operations. This module 
+    is designed to be a general-purpose vector module that replicates the 
+    common features of scientific computing libraries. This module is 
+    designed to provide a comprehensive repository of linear algebra functions, 
+    similar to Python's numpy, for use in data pipelines and developing 
+    machine learning models. *)
 
 type t
 (** Representation type of [Vector]. *)
