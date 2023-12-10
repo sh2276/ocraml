@@ -54,18 +54,18 @@ let shuffle_list lst =
       let temp = arr.(i) in
       arr.(i) <- arr.(j);
       arr.(j) <- temp
-    done in 
+    done
+  in
   let arr = Array.of_list lst in
   fisher_yates_shuffle arr;
   Array.to_list arr
 
-
 (*labels files in a directory according to the right class *)
-let label_files dir = 
+let label_files dir =
   List.flatten
-  (List.map
-     (fun (x, label) ->
-       List.map
-         (fun y -> (x ^ "/" ^ y, label))
-         (Array.to_list (Sys.readdir x)))
-     dir)
+    (List.map
+       (fun (x, label) ->
+         List.map
+           (fun y -> (x ^ "/" ^ y, label))
+           (Array.to_list (Sys.readdir x)))
+       dir)
