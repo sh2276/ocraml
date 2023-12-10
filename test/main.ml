@@ -705,24 +705,17 @@ let loader_tests =
     ( "if_names on a mock input directory" >:: fun _ ->
       loader_if_names_test
         [
-          "./test/testinput/0.png";
-          "./test/testinput/1.png";
-          "./test/testinput/2.png";
-          "./test/testinput/3.png";
-          "./test/testinput/4.png";
-          "./test/testinput/5.png";
+          "./test/testinput/0.png"; "./test/testinput/1.png";
+          "./test/testinput/2.png"; "./test/testinput/3.png";
+          "./test/testinput/4.png"; "./test/testinput/5.png";
           "./test/testinput/6.png";
         ]
         "./test/testinput/" );
     ( "if_names on a mock train directory" >:: fun _ ->
       loader_if_names_test
         [
-          "./test/testtrain/0";
-          "./test/testtrain/1";
-          "./test/testtrain/2";
-          "./test/testtrain/3";
-          "./test/testtrain/4";
-          "./test/testtrain/5";
+          "./test/testtrain/0"; "./test/testtrain/1"; "./test/testtrain/2";
+          "./test/testtrain/3"; "./test/testtrain/4"; "./test/testtrain/5";
           "./test/testtrain/6";
         ]
         "./test/testtrain/" );
