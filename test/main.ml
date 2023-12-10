@@ -730,15 +730,22 @@ let loader_list_test (out : Vector.t list) (in1 : string list)
 (* Ocaml Sys doesn't read lists in alphabetical order so we need a comparison
    function to see if lists have the same elements *)
 
-let rec compare_lists a b acc : bool =
-  match a with
-  | [] -> acc
-  | h :: t -> List.mem h b && acc
+let compare_lists a b =
+  let rec compare_lists_aux a b acc : bool =
+    match a with
+    | [] -> acc
+    | h :: t -> List.mem h b && acc
+  in
+  compare_lists_aux a b true
 
 let loader_if_names_test (out : string list) (in1 : string) =
   assert_bool "all elements of either list don't exist in the other"
-    (compare_lists out (Loader.if_names in1) true
-    && compare_lists (Loader.if_names in1) out true)
+    (compare_lists out (Loader.if_names in1)
+    && compare_lists (Loader.if_names in1) out)
+
+let shuffle_test (in1 : string list) =
+  assert_bool "shuffle doesn't return the same elements"
+    (compare_lists in1 (Loader.shuffle_list in1))
 
 let loader_tests =
   [
@@ -779,6 +786,10 @@ let loader_tests =
           "./test/testtrain/6";
         ]
         "./test/testtrain/" );
+    ("shuffle single element" >:: fun _ -> shuffle_test [ "test" ]);
+    ("shuffle two elements" >:: fun _ -> shuffle_test [ "test1"; "test2" ]);
+    ( "shuffle multi-element list" >:: fun _ ->
+      shuffle_test [ "a"; "b"; "c"; "d"; "e"; "f"; "g" ] );
   ]
 
 let suite =
