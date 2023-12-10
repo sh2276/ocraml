@@ -208,7 +208,6 @@ let vec_tests =
         v20 v20 Vector.add );
     ( " add two vectors of length 5 with different values" >:: fun _ ->
       vector_a_s_tester [| 1.5; 3.5; 5.5; 7.5; 9.5 |] v5 v5_2 Vector.add );
-    (* vector addition tests *)
     ( "add two vectors of length 2" >:: fun _ ->
       vector_a_s_tester [| 2.5; 5.5 |] [| 0.5; 1.5 |] [| 2.0; 4.0 |] Vector.add
     );
@@ -358,6 +357,16 @@ let vec_tests =
       vector_argmax_tester 1 [| -1.; 0.; 0.; 0.; 0.; 0.; -1. |] );
     ( "argmax of vector with all but one value negative " >:: fun _ ->
       vector_argmax_tester 5 [| -1.; -1.; -1.; -1.; -1.; 0.; -1. |] );
+    ( "argmax of vector with all values negative" >:: fun _ ->
+      vector_argmax_tester 4 [| -5.0; -3.0; -7.0; -9.0; -2.0 |] );
+    ( "argmax of vector with all values positive" >:: fun _ ->
+      vector_argmax_tester 3 [| 1.0; 3.0; 2.0; 4.0; 0.5 |] );
+    ( "argmax of vector with large positive values" >:: fun _ ->
+      vector_argmax_tester 3 [| 1000.0; 500.0; 750.0; 1200.0; 900.0 |] );
+    ( "argmax of vector with large negative values" >:: fun _ ->
+      vector_argmax_tester 0 [| -500.0; -1000.0; -750.0; -1200.0; -900.0 |] );
+    ( "argmax of vector with NaN values" >:: fun _ ->
+      vector_argmax_tester 4 [| 1.0; 2.0; nan; 4.0; 5.0 |] );
   ]
 
 (*==============================================================================
