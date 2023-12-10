@@ -107,7 +107,26 @@ let vector_size =
 module Perceptron = Perceptron
 
 let perceptron =
+<<<<<<< Updated upstream
   ref (Perceptron.create vector_size [ 0; 1; 2; 3; 4; 5; 6; 7; 8; 9 ])
+=======
+  Perceptron.create
+    (Matrix.num_cols image_matrix)
+    [ 0; 1; 2; 3; 4; 5; 6; 7; 8; 9 ]
+
+let train_n rate lst perceptron =
+  let rec train_aux lst acc =
+    match lst with
+    | [] -> acc
+    | (v, e) :: t ->
+        let newp =
+          print_endline (string_of_int e);
+          Perceptron.update_weights rate (Vector.init v) e acc
+        in
+        train_aux t newp
+  in
+  train_aux lst perceptron
+>>>>>>> Stashed changes
 
 let demo () =
   let width = 500 in

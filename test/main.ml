@@ -495,7 +495,7 @@ let or_list = List.combine list_of_gate_vecs [ 1; 0; 1; 1 ]
 
 let perceptron_base_test (out : int) (in1 : Vector.t) =
   let result =
-    Perceptron.update_weights 0.2 1 (Vector.init [| 1.0; 1.0 |]) bool_perceptron
+    Perceptron.update_weights 0.2 (Vector.init [| 1.0; 1.0 |]) 1 bool_perceptron
   in
   let prediction = Perceptron.predict in1 result in
   assert_equal out prediction

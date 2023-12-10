@@ -2,7 +2,9 @@
  (name ocraml)
  (public_name OCRaml)
  (libraries bimage bimage-unix)
- (modules matrix perceptron vector loader))
+ (modules matrix perceptron vector loader)
+ (instrumentation
+  (backend bisect_ppx)))
 
 (executable
  (name loaderexample)

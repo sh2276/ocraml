@@ -1,3 +1,6 @@
+(** A [Class] is an util-module that generifies nessecary types and relevant
+    helper functions. Given a list of classifications, it can map it between
+    distinct integers and vice versa. *)
 module Class = struct
   (** The representation type of a [Class]. *)
   type 'a t = 'a list
@@ -23,8 +26,7 @@ module Class = struct
   let num_of_classes lst = List.length lst
 end
 
-type 'a return = 'a Class.t
-type 'a t = Matrix.t * Vector.t * 'a return
+type 'a t = Matrix.t * Vector.t * 'a Class.t
 (* AF: A perceptron [(m, b, f)] is represented by a tuple of a vector [m], a
    float representing bias [b], and binding function [f] that maps the integers
    [0, c - 1] to a set of results. RI: abs(b) < 1 *)
@@ -44,7 +46,7 @@ let predict inputs (m, b, f) =
   let open Vector in
   unbiased + b |> argmax |> Class.get f
 
-let update_weights learning_rate expected inputs (m, b, f) =
+let update_weights learning_rate inputs expected (m, b, f) =
   let actual = predict inputs (m, b, f) in
   if expected = actual then (m, b, f)
   else
@@ -62,12 +64,12 @@ let update_weights learning_rate expected inputs (m, b, f) =
     in
     (Matrix.(m + add_w), Vector.(b + error), f)
 
-let train_all rate lst perceptron =
+let train_once rate lst perceptron =
   let rec train_aux lst acc =
     match lst with
     | [] -> acc
     | (v, e) :: t ->
-        let newp = update_weights rate e v acc in
+        let newp = update_weights rate v e acc in
         train_aux t newp
   in
   train_aux lst perceptron
@@ -76,6 +78,6 @@ let train_epoch rate num lst perceptron =
   let rec train_aux num perceptron =
     match num with
     | 0 -> perceptron
-    | _ -> train_aux Stdlib.(num - 1) (train_all rate lst perceptron)
+    | _ -> train_aux Stdlib.(num - 1) (train_once rate lst perceptron)
   in
   train_aux num perceptron
