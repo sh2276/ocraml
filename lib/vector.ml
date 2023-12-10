@@ -56,6 +56,3 @@ let argmax = function
 let to_string (v : t) =
   let str_elements = Array.map string_of_float (to_array v) in
   "[ " ^ String.concat "; " (Array.to_list str_elements) ^ " ]"
-
-(*Prints a vector.*)
-let print_vec (v : t) = v |> to_string |> print_endline

@@ -76,6 +76,7 @@ let transpose mat =
 (* Converts a matrix to a float array array. *)
 let to_array (m : t) = m
 
+<<<<<<< HEAD
 (*Converts a matrix into a string.*)
 let to_string (mat : t) =
   let rows = num_rows mat in
@@ -93,3 +94,7 @@ let to_string (mat : t) =
 
 (*Prints a matrix*)
 let print_mat (mat : t) = mat |> to_string |> print_endline
+=======
+(* Converts a matrix to a list of vectors *)
+let to_vector_list (m : t) = List.map (fun x -> Vector.init x) (Array.to_list m)
+>>>>>>> e1d4a49f59093cfc1f7d5347e926e4de969871cb
