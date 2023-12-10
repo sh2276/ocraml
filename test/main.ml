@@ -18,7 +18,15 @@
 
 open OUnit2
 open Ocraml
-open Vector
+
+(*==============================================================================
+                             HELPER FUNCTIONS
+==============================================================================*)
+
+let pp_arr f arr =
+  Printf.sprintf "[|%s|]" (String.concat "; " Array.(to_list (map f arr)))
+
+let pp_list f lst = Printf.sprintf "[%s]" (String.concat "; " (List.map f lst))
 
 (*==============================================================================
                              VECTOR TEST SUITE
@@ -29,10 +37,7 @@ open Vector
 let vector_init_tester (in1 : float array) =
   let vect = Vector.init in1 in
   let arr_from_vector = Vector.to_array vect in
-  assert_equal
-    ~printer:(fun arr ->
-      Printf.sprintf "[|%s|]"
-        (String.concat "; " Array.(to_list (map string_of_float arr))))
+  assert_equal ~printer:(pp_arr string_of_float)
     ~msg:"Vector not initalized properly." in1 arr_from_vector
 
 (** Function to test vector add and subtract operations. *)
@@ -41,22 +46,16 @@ let vector_a_s_tester (out : float array) (in1 : float array)
   let v1 = Vector.init in1 in
   let v2 = Vector.init in2 in
   let arr_from_op = Vector.to_array (op v1 v2) in
-  assert_equal
-    ~printer:(fun arr ->
-      Printf.sprintf "[|%s|]"
-        (String.concat "; " Array.(to_list (map string_of_float arr))))
-    ~msg:"Vector operation failed." out arr_from_op
+  assert_equal ~printer:(pp_arr string_of_float) ~msg:"Vector operation failed."
+    out arr_from_op
 
 (** Function to test vector scalar multiplication operation. *)
 let vector_s_mult_tester (out : float array) (in1 : float) (in2 : float array) =
   let vect = Vector.init in2 in
-  let arr_from_op = Vector.to_array (scalar_mult in1 vect) in
+  let arr_from_op = Vector.(scalar_mult in1 vect |> to_array) in
   let arr_from_infix = Vector.to_array Vector.(in1 * vect) in
   let ae arr =
-    assert_equal
-      ~printer:(fun arr ->
-        Printf.sprintf "[|%s|]"
-          (String.concat "; " Array.(to_list (map string_of_float arr))))
+    assert_equal ~printer:(pp_arr string_of_float)
       ~msg:"Vector scalar muliplication failed." out arr
   in
   ae arr_from_op;
@@ -66,7 +65,7 @@ let vector_s_mult_tester (out : float array) (in1 : float) (in2 : float array) =
 let vector_dprod_tester (out : float) (in1 : float array) (in2 : float array) =
   let v1 = Vector.init in1 in
   let v2 = Vector.init in2 in
-  let float_from_op = dot_prod v1 v2 in
+  let float_from_op = Vector.dot_prod v1 v2 in
   let float_from_infix = Vector.(v1 @ v2) in
   let ae res =
     assert_equal ~printer:string_of_float ~msg:"Vector dot product failed." out
@@ -337,10 +336,7 @@ let row_to_string row =
 let matrix_init_tester (in1 : float array array) =
   let mat = Matrix.init in1 in
   let arr_from_matrix = Matrix.to_array mat in
-  assert_equal
-    ~printer:(fun mat ->
-      Printf.sprintf "[| %s |]"
-        (String.concat "; " (Array.to_list (Array.map row_to_string mat))))
+  assert_equal ~printer:(pp_arr row_to_string)
     ~msg:"Matrix not initialized properly." in1 arr_from_matrix
 
 (** Function to test num_rows and num_cols simultaneously. *)
@@ -361,10 +357,7 @@ let mat_vec_prod_tester (out : float array) (mat : float array array)
   let prod = Vector.to_array (Matrix.mat_vec_prod mat vec) in
   let prod_2 = Vector.to_array Matrix.(mat @ vec) in
   let ae o i =
-    assert_equal
-      ~printer:(fun arr ->
-        Printf.sprintf "[| %s |]"
-          (String.concat "; " Array.(to_list (map string_of_float arr))))
+    assert_equal ~printer:(pp_arr string_of_float)
       ~msg:"Vector operation failed." o i
   in
   ae out prod;
@@ -378,11 +371,8 @@ let mat_mat_prod_tester (out : float array array) (mat1 : float array array)
   let prod = Matrix.to_array (Matrix.mat_mat_prod mat1 mat2) in
   let prod_2 = Matrix.to_array Matrix.(mat1 * mat2) in
   let ae o i =
-    assert_equal
-      ~printer:(fun m ->
-        Printf.sprintf "[| %s |]"
-          (String.concat "; " (Array.to_list (Array.map row_to_string m))))
-      ~msg:"Matrix operation failed." o i
+    assert_equal ~printer:(pp_arr row_to_string) ~msg:"Matrix operation failed."
+      o i
   in
   ae out prod;
   ae out prod_2
@@ -392,11 +382,8 @@ let mat_mat_add_tester (out : float array array) (mat1 : float array array)
   let mat1 = Matrix.init mat1 in
   let mat2 = Matrix.init mat2 in
   let sum = Matrix.(mat_mat_add mat1 mat2 |> to_array) in
-  assert_equal
-    ~printer:(fun m ->
-      Printf.sprintf "[| %s |]"
-        (String.concat "; " (Array.to_list (Array.map row_to_string m))))
-    ~msg:"Matrix operation failed." out sum
+  assert_equal ~printer:(pp_arr row_to_string) ~msg:"Matrix operation failed."
+    out sum
 
 (** Function to test matrix transpose. *)
 let matrix_transpose_tester (mat : float array array) (out : float array array)
@@ -404,11 +391,8 @@ let matrix_transpose_tester (mat : float array array) (out : float array array)
   let mat = Matrix.init mat in
   let trans = Matrix.to_array (Matrix.transpose mat) in
   let ae o i =
-    assert_equal
-      ~printer:(fun m ->
-        Printf.sprintf "[| %s |]"
-          (String.concat "; " (Array.to_list (Array.map row_to_string m))))
-      ~msg:"Matrix transpose failed." o i
+    assert_equal ~printer:(pp_arr row_to_string) ~msg:"Matrix transpose failed."
+      o i
   in
   ae out trans
 
@@ -493,7 +477,7 @@ let list_of_gate_vecs =
 let and_list = List.combine list_of_gate_vecs [ 1; 0; 0; 0 ]
 let or_list = List.combine list_of_gate_vecs [ 1; 0; 1; 1 ]
 
-let perceptron_base_test (out : int) (in1 : Vector.t) =
+let perceptron_update_test (out : int) (in1 : Vector.t) =
   let result =
     Perceptron.update_weights 0.2 (Vector.init [| 1.0; 1.0 |]) 1 bool_perceptron
   in
@@ -501,19 +485,19 @@ let perceptron_base_test (out : int) (in1 : Vector.t) =
   assert_equal out prediction
 
 let perceptron_and_test (out : int) (in1 : Vector.t) =
-  let result = Perceptron.train_epoch 0.2 10 and_list bool_perceptron in
+  let result = Perceptron.train 0.2 0. 10 and_list bool_perceptron in
   let prediction = Perceptron.predict in1 result in
   assert_equal out prediction
 
 let perceptron_or_test (out : int) (in1 : Vector.t) =
-  let result = Perceptron.train_epoch 0.2 10 or_list bool_perceptron in
+  let result = Perceptron.train 0.2 0. 10 or_list bool_perceptron in
   let prediction = Perceptron.predict in1 result in
   assert_equal out prediction
 
 let perceptron_tests =
   [
     ( "perceptron with one update" >:: fun _ ->
-      perceptron_base_test 1 (Vector.init [| 1.0; 1.0 |]) );
+      perceptron_update_test 1 (Vector.init [| 1.0; 1.0 |]) );
     ( "trained and perceptron" >:: fun _ ->
       perceptron_and_test 1 (Vector.init [| 1.0; 1.0 |]) );
     ( "trained or perceptron" >:: fun _ ->
@@ -523,7 +507,30 @@ let perceptron_tests =
 (*==============================================================================
                               LOADER TEST SUITE
 ==============================================================================*)
-let loader_tests = []
+
+let loader_test (out : Vector.t list) (in1 : string list)
+    (trans : Bimage.Expr.pixel Bimage.Expr.t list) =
+  let x = Loader.to_vector_list in1 Bimage.gray trans in
+  assert_equal ~printer:(pp_list Vector.to_string) out x
+
+let loader_tests =
+  [
+    ( "loader with one pixel" >:: fun _ ->
+      loader_test Vector.[ init [| 0. |] ] [ "./test/1x1.png" ] [] );
+    ( "loader with one white pixel" >:: fun _ ->
+      loader_test
+        Vector.[ init [| 1. |] ]
+        [ "./test/1x1.png" ]
+        [ Bimage.Expr.invert () ] );
+    ( "loader with 2x2 image" >:: fun _ ->
+      loader_test Vector.[ init [| 0.; 0.; 1.; 0. |] ] [ "./test/2x2.png" ] []
+    );
+    ( "loader with image list" >:: fun _ ->
+      loader_test
+        Vector.[ init [| 0.; 0.; 1.; 0. |]; init [| 0. |] ]
+        [ "./test/2x2.png"; "./test/1x1.png" ]
+        [] );
+  ]
 
 let suite =
   "ocraml test suite"

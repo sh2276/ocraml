@@ -28,20 +28,20 @@ val transform_all_images :
 (** [transform_all_images] applies [transform_image] to all images in the list
     passed in as the argument *)
 
-val img_to_vallist : ('a, 'b, 'c) Image.t -> 'a list
-(** [img_to_vallist] converts a (float, f32, Spec.ColorModule.t) Image.t Image
+val listify : ('a, 'b, 'c) Image.t -> 'a list
+(** [listify] converts a (float, f32, Spec.ColorModule.t) Image.t Image
     to a float list representing the gray value of each pixel*)
 
-val imglist_to_vallistlist : ('a, 'b, 'c) Image.t list -> 'a list list
-(** [imglist_to_callistlist] converts a list of Images to to a list of lists of
+val listify_n: ('a, 'b, 'c) Image.t list -> 'a list list
+(** [listify_n] converts a list of Images to to a list of lists of
     values, where the inner list of values represents an image *)
 
-val vallist_to_stringlist : float list -> string list
-(** [vallist_to_stringlist] converts a float list representation of a picture
+val strings_of_list : float list -> string list
+(** [string_of_list] converts a float list representation of a picture
     into a string list for printing *)
 
-val vallistlist_to_stringlistlist : float list list -> string list list
-(** [vallistlist_to_stringlistlist] applies [vallist_to_stringlist] to each
+val strings_of_list_list : float list list -> string list list
+(** [strings_of_list_list] applies [strings_of_list] to each
     element of a list of float list representations of images *)
 
 (* val to_matrix :

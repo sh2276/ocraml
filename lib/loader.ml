@@ -18,10 +18,10 @@ let rec transform_image remaining_transforms img =
 let transform_all_images transformations img_list =
   List.map (transform_image transformations) img_list
 
-let img_to_vallist img = Array.to_list (Data.to_array (Image.data img))
-let imglist_to_vallistlist img_list = List.map img_to_vallist img_list
+let listify img = Array.to_list (Data.to_array (Image.data img))
+let listify_n img_list = List.map listify img_list
 
-let vallist_to_stringlist (val_list : float list) =
+let strings_of_list (val_list : float list) =
   let rec helper val_list acc =
     match val_list with
     | [] -> acc
@@ -29,8 +29,8 @@ let vallist_to_stringlist (val_list : float list) =
   in
   List.rev (helper val_list [])
 
-let vallistlist_to_stringlistlist (val_listlist : 'a list list) =
-  List.map vallist_to_stringlist val_listlist
+let strings_of_list_list (val_listlist : float list list) =
+  List.map strings_of_list val_listlist
 
 (* let to_matrix files colortype transformations = let vallistlist =
    files_to_imglist colortype files |> transform_all_images transformations |>
@@ -53,6 +53,6 @@ let to_vector_list files colortype transformations =
   let vallistlist =
     files_to_imglist colortype files
     |> transform_all_images transformations
-    |> imglist_to_vallistlist
+    |> listify_n
   in
   List.map (fun x -> Vector.init (Array.of_list x)) vallistlist

@@ -104,8 +104,6 @@ let vector_size =
   in
   Vector.length first_vector
 
-module Perceptron = Perceptron
-
 let perceptron =
   ref (Perceptron.create vector_size [ 0; 1; 2; 3; 4; 5; 6; 7; 8; 9 ])
 
@@ -206,7 +204,7 @@ let demo () =
 
           (* replace with perceptron inference *)
           print_endline "pressed start computing";
-          perceptron := Perceptron.train_epoch 0.2 1 labeled_images !perceptron;
+          perceptron := Perceptron.train 0.2 0. 1 labeled_images !perceptron;
           print_endline "finished training")
         else (
           Slider.set sw (x + 1);

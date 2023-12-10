@@ -74,10 +74,24 @@ let train_once rate lst perceptron =
   in
   train_aux lst perceptron
 
-let train_epoch rate num lst perceptron =
+let num_of_errors lst perceptron =
+  let rec tally lst acc =
+    match lst with
+    | [] -> acc
+    | (v, e) :: t ->
+        let p = predict v perceptron in
+        if p = e then tally t acc else tally t (acc +. 1.)
+  in
+  tally lst 0.
+
+let train rate margin num lst perceptron =
   let rec train_aux num perceptron =
     match num with
     | 0 -> perceptron
-    | _ -> train_aux Stdlib.(num - 1) (train_once rate lst perceptron)
+    | _ ->
+        let newp = train_once rate lst perceptron in
+        let len = List.length lst |> float_of_int in
+        let e = num_of_errors lst newp in
+        if e /. len < margin then perceptron else train_aux (num - 1) newp
   in
   train_aux num perceptron
