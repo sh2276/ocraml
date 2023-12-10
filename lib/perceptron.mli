@@ -14,7 +14,15 @@ module type PerceptronType = sig
 
   val update_weights : float -> 'a -> Vector.t -> 'a t -> 'a t
   (** [update_weights learning_rate expected inputs perceptron] updates the
-      weights of the perceptron based on the error. *)
+      weights of the perceptron based on the given vector. *)
+
+  val train_all : float -> (Vector.t * 'a) list -> 'a t -> 'a t
+  (** [train_all learning_rate lst perceptron] will train the perceptron on [lst], 
+      which is an association list of vectors and their corresponding expected outputs. *)
+
+  val train_epoch : float -> int -> (Vector.t * 'a) list -> 'a t -> 'a t
+  (** [train_epoch learning_rate num_of_epochs lst perceptron] will train the perceptron 
+      [num_of_epoch] times. *)
 end
 
 module Perceptron : PerceptronType

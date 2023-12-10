@@ -485,49 +485,39 @@ let loader_tests = []
                             PERCEPTRON TEST SUITE
 ==============================================================================*)
 
-let bool_perceptron = Perceptron.Perceptron.create 3 [ 0; 1 ]
+let bool_perceptron = Perceptron.Perceptron.create 2 [ 0; 1 ]
 
 let and_list =
-  [
-    ([| 1.0; 1.0; 1. |], 1);
-    ([| 0.0; 0.0; 1. |], 0);
-    ([| 1.0; 0.0; 1. |], 0);
-    ([| 0.0; 1.0; 1. |], 0);
-  ]
-
-let train_n rate lst perceptron =
-  let rec train_aux lst acc =
-    match lst with
-    | [] -> acc
-    | (v, e) :: t ->
-        let newp =
-          print_endline (string_of_int e);
-          Perceptron.Perceptron.update_weights rate e (Vector.init v) acc
-        in
-        train_aux t newp
-  in
-  train_aux lst perceptron
+  Vector.
+    [
+      (init [| 1.0; 1.0 |], 1);
+      (init [| 0.0; 0.0 |], 0);
+      (init [| 1.0; 0.0 |], 0);
+      (init [| 0.0; 1.0 |], 0);
+    ]
 
 let perceptron_base_test (out : int) (in1 : Vector.t) =
   let result =
     Perceptron.Perceptron.update_weights 0.2 1
-      (Vector.init [| 1.0; 1.0; 1. |])
+      (Vector.init [| 1.0; 1.0 |])
       bool_perceptron
   in
   let prediction = Perceptron.Perceptron.predict in1 result in
   assert_equal out prediction
 
 let perceptron_and_test (out : int) (in1 : Vector.t) =
-  let result = train_n 0.2 and_list bool_perceptron in
+  let result =
+    Perceptron.Perceptron.train_epoch 0.2 6 and_list bool_perceptron
+  in
   let prediction = Perceptron.Perceptron.predict in1 result in
   assert_equal out prediction
 
 let perceptron_tests =
   [
     ( "and perceptron1" >:: fun _ ->
-      perceptron_base_test 1 (Vector.init [| 1.0; 1.0; 1.0 |]) );
+      perceptron_base_test 1 (Vector.init [| 1.0; 1.0 |]) );
     ( "and perceptron" >:: fun _ ->
-      perceptron_and_test 1 (Vector.init [| 1.0; 1.0; 1.0 |]) );
+      perceptron_and_test 1 (Vector.init [| 1.0; 1.0 |]) );
   ]
 
 let suite =

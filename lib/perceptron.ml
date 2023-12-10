@@ -29,6 +29,8 @@ module type PerceptronType = sig
   val create : int -> 'a list -> 'a t
   val predict : Vector.t -> 'a t -> 'a
   val update_weights : float -> 'a -> Vector.t -> 'a t -> 'a t
+  val train_all : float -> (Vector.t * 'a) list -> 'a t -> 'a t
+  val train_epoch : float -> int -> (Vector.t * 'a) list -> 'a t -> 'a t
 end
 
 module Perceptron : PerceptronType = struct
@@ -69,7 +71,23 @@ module Perceptron : PerceptronType = struct
           * init [| Vector.(inputs |> to_array) |]
           |> transpose)
       in
-      (* print_endline Matrix.(to_string (m + add_w)); print_endline
-         Vector.(to_string (b + error)); *)
       (Matrix.(m + add_w), Vector.(b + error), f)
+
+  let train_all rate lst perceptron =
+    let rec train_aux lst acc =
+      match lst with
+      | [] -> acc
+      | (v, e) :: t ->
+          let newp = update_weights rate e v acc in
+          train_aux t newp
+    in
+    train_aux lst perceptron
+
+  let train_epoch rate num lst perceptron =
+    let rec train_aux num perceptron =
+      match num with
+      | 0 -> perceptron
+      | _ -> train_aux Stdlib.(num - 1) (train_all rate lst perceptron)
+    in
+    train_aux num perceptron
 end
