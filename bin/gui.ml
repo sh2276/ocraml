@@ -37,9 +37,9 @@ let _ =
 
 (* Get list of input file paths and make a list of input image vectors*)
 let input_dir = input_line stdin
-let _ = print_endline "Loading files..."
-
+let _ = print_endline "Loading files (might take a bit)..."
 let input_file_names = Loader.if_names input_dir
+
 let input_images =
   Loader.to_vector_list input_file_names gray [ Expr.invert () ]
 
@@ -54,9 +54,7 @@ let train_folders =
     (Array.to_list (Sys.readdir training_dir))
 
 let train_classes = List.map (fun (_, label) -> label) train_folders
-
-let labeled_train_files = Loader.label_files (train_folders)
-
+let labeled_train_files = Loader.label_files train_folders
 let unlabeled_train_files = List.map (fun (x, _) -> x) labeled_train_files
 let train_labels = List.map (fun (_, label) -> label) labeled_train_files
 
@@ -85,15 +83,20 @@ let perceptron = ref (Perceptron.create vector_size train_classes)
 let demo () =
   let width = 500 in
 
-  (* Page 1: Upload Image *)
-  let upload_title = section_title "Upload Image" in
-  let upload_layout = L.tower ~margins:0 ~align:Draw.Center [ upload_title ] in
-  let button_load = W.button ~border_radius:10 "Load" in
-  let click _ = print_endline "clicked load" in
-  W.on_click ~click button_load;
-  let page1 =
-    L.tower [ upload_layout; L.flat_of_w [ button_load ]; hline width ]
+  (* Page 1: OCRaml overview *)
+  let overview_text =
+    "OCRaml is an optical character recognition tool designed to recognize \
+     handwritten digits. You have already uploaded your data and trained a \
+     perceptron model. Simply navigate to the next tab to see the results. You \
+     may click on each of the images you uploaded and see them. When you want \
+     to see what OCRaml has guessed your character to be (ADD INSTRUCTIONS)"
   in
+  let text_head =
+    W.rich_text ~size:20 ~w:width ~h:30
+      Text_display.(page [ bold (para "Welcome to OCRaml!") ])
+  in
+  let text = W.text_display ~w:width ~h:630 overview_text in
+  let page1 = L.tower [ L.resident text_head; L.resident text ] in
 
   (* Page 2: Display Image *)
   let image_title = section_title "Image display" in
@@ -251,7 +254,7 @@ let demo () =
 
   let tabs =
     Tabs.create ~slide:Avar.Right
-      [ ("Upload Image", page1); ("Display Image", page2); ("Results", page3) ]
+      [ ("OCRaml Info", page1); ("Display Image", page2); ("Results", page3) ]
   in
 
   let board =
