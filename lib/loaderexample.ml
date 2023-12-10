@@ -1,14 +1,11 @@
-open Ocraml.Loader
-open Bimage.Expr
-open Bimage
+(* open Ocraml.Loader open Bimage.Expr open Bimage
 
-let _ =
-  let transformations = [ invert () ] in
-  let files = [ "./input/3.png" ] in
+   let _ = let transformations = [ invert () ] in let files = [ "./input/3.png"
+   ] in
 
-  let _ = to_string files gray transformations in
-  let _ = dir_to_matrix "./strain/0/" gray transformations in
+   let _ = to_string files gray transformations in let _ = dir_to_matrix
+   "./strain/0/" gray transformations in
 
-  (* get a matrix, which is a vector of (vector representing each image) *)
-  let vector_of_imagevectors = to_matrix files gray transformations in
-  Ocraml.Matrix.print_mat vector_of_imagevectors
+   (* get a matrix, which is a vector of (vector representing each image) *) let
+   vector_of_imagevectors = to_matrix files gray transformations in
+   Ocraml.Matrix.print_mat vector_of_imagevectors *)

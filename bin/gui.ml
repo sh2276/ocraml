@@ -29,7 +29,6 @@ let _ =
      of the contents within.) : "
 
 let training_dir = input_line stdin
-let _ = print_endline training_dir
 
 let _ =
   print_endline
@@ -38,27 +37,30 @@ let _ =
 
 (* Get list of input file paths *)
 let input_dir = input_line stdin
-let _ = print_endline input_dir
-let input_dir = if input_dir = "" then "./uploads/" else input_dir
 let _ = print_endline "Loading files..."
 
-let input_files =
+let input_file_names =
   List.map (fun x -> input_dir ^ x) (Array.to_list (Sys.readdir input_dir))
 
 (* Get list of training file paths *)
+(* Add labels to each of the files *)
 let train_folders =
   List.map
     (fun x -> (training_dir ^ x, int_of_string x))
     (Array.to_list (Sys.readdir training_dir))
 
-let train_files =
-  List.map
-    (fun x -> List.map (fun y -> x ^ "/" ^ y) (Array.to_list (Sys.readdir x)))
-    train_folders
+let labeled_train_files =
+  List.flatten
+    (List.map
+       (fun (x, label) ->
+         List.map
+           (fun y -> (x ^ "/" ^ y, label))
+           (Array.to_list (Sys.readdir x)))
+       train_folders)
 
 (* Shuffle the list *)
-let _ = Random.self_init ()
-
+(* Used Fisher-Yates shuffling algorithm to randomize the order of training
+   inputs *)
 let fisher_yates_shuffle arr =
   let len = Array.length arr in
   for i = 0 to len - 2 do
@@ -73,10 +75,11 @@ let shuffle_list lst =
   fisher_yates_shuffle arr;
   Array.to_list arr
 
-let train_files = List.flatten train_files
-let train_files = shuffle_list train_files
-let _ = List.map print_string train_files
-let image_matrix = Loader.to_matrix train_files gray []
+let unlabeled_train_files = List.map (fun (x, _) -> x) labeled_train_files
+
+let unlabeled_images =
+  Loader.to_vector_list unlabeled_train_files gray [ Expr.invert () ]
+
 (* let _ = print_endline (string_of_int (Matrix.num_rows image_matrix)) let _ =
    print_endline (string_of_int (Matrix.num_cols image_matrix)) *)
 

@@ -32,22 +32,23 @@ let vallist_to_stringlist (val_list : float list) =
 let vallistlist_to_stringlistlist (val_listlist : 'a list list) =
   List.map vallist_to_stringlist val_listlist
 
-let to_matrix files colortype transformations =
+(* let to_matrix files colortype transformations = let vallistlist =
+   files_to_imglist colortype files |> transform_all_images transformations |>
+   imglist_to_vallistlist in let valarrarr = Array.of_list (List.map
+   Array.of_list vallistlist) in Matrix.init valarrarr *)
+
+(* let to_string files colortype transformations = Matrix.to_string (to_matrix
+   files colortype transformations) *)
+
+(* let dir_to_matrix dir colortype transformations = let files = Sys.readdir dir
+   in let files = List.map (fun x -> dir ^ x) (Array.to_list files) in let out =
+   to_matrix files colortype transformations in let _ = print_endline "files
+   loaded" in out *)
+
+let to_vector_list files colortype transformations =
   let vallistlist =
     files_to_imglist colortype files
     |> transform_all_images transformations
     |> imglist_to_vallistlist
   in
-  let valarrarr = Array.of_list (List.map Array.of_list vallistlist) in
-  Matrix.init valarrarr
-
-let to_string files colortype transformations =
-  Matrix.to_string (to_matrix files colortype transformations)
-
-let dir_to_matrix dir colortype transformations =
-  let files = Sys.readdir dir in
-  let files = List.map (fun x -> dir ^ x) (Array.to_list files) in
-  let out = to_matrix files colortype transformations in
-  let _ = print_endline "files loaded" in
-  out
-(* let to_vector_list files colortype transformations = *)
+  List.map (fun x -> Vector.init (Array.of_list x)) vallistlist

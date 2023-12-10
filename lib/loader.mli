@@ -1,18 +1,6 @@
 open Bimage
 open Bimage.Expr
-(* (** A [LoaderSpec] specifies which files will be loaded in and the
-   transformations that will be applied to them. ` *) module type LoaderSpec =
-   sig module ColorModule : COLOR
 
-   type color = [ `Gray | `Rgb | `Rgba ] Color.t
-
-   val transformations : pixel t list (** [transformations] is a list of
-   transformations from Bimage.Expr*)
-
-   val files : string list (** [files] is a list of files containing images we
-   want to use *) end *)
-
-(* module Loader : sig *)
 val file_to_img :
   ([< `Gray | `Rgb | `Rgba ] as 'a) Color.t ->
   string ->
@@ -43,6 +31,8 @@ val img_to_vallist : ('a, 'b, 'c) Image.t -> 'a list
     to a float list representing the gray value of each pixel*)
 
 val imglist_to_vallistlist : ('a, 'b, 'c) Image.t list -> 'a list list
+(** [imglist_to_callistlist] converts a list of Images to to a list of lists of
+    values, where the inner list of values represents an image *)
 
 val vallist_to_stringlist : float list -> string list
 (** [vallist_to_stringlist] converts a float list representation of a picture
@@ -52,20 +42,25 @@ val vallistlist_to_stringlistlist : float list list -> string list list
 (** [vallistlist_to_stringlistlist] applies [vallist_to_stringlist] to each
     element of a list of float list representations of images *)
 
-val to_matrix :
-  string list -> [< `Gray | `Rgb | `Rgba ] Color.t -> pixel t list -> Matrix.t
+(* val to_matrix :
+  string list -> [< `Gray | `Rgb | `Rgba ] Color.t -> pixel t list -> Matrix.t *)
 (** [to_matrix] returns a vector of vectors (a Matrix), where each vector
     represents a the vector representation of an image in each file from M.files *)
-(* end *)
 
-val to_string :
+(* val to_string :
   string list ->
   [< `Gray | `Rgb | `Rgba ] Color.t ->
   Expr.pixel Expr.t list ->
-  string
+  string *)
+(* [to_string] converts everything *)
 
-val dir_to_matrix :
+(* val dir_to_matrix :
   string ->
   [< `Gray | `Rgb | `Rgba ] Color.t ->
   Expr.pixel Expr.t list ->
-  Matrix.t
+  Matrix.t *)
+
+val to_vector_list : string list ->
+  [< `Gray | `Rgb | `Rgba ] Color.t ->
+  Expr.pixel Expr.t list ->
+  Vector.t list
