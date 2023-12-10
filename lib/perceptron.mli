@@ -20,6 +20,10 @@ val update_weights : float -> Vector.t -> 'a -> 'a t -> 'a t
     weights of the perceptron based on the given vector. [rate] 
     is the specified learning rate of the perceptron. *)
 
+val margin_of_error : (Vector.t * 'a) list -> 'a t -> float
+(** [margin_of_error lst perceptron] checks every input against the perceptron 
+    and calculates what percentage of it is accurately guessed.*)
+
 val train : float -> float -> int -> (Vector.t * 'a) list -> 'a t -> 'a t
 (** [train rate margin num_of_epochs lst perceptron] will train the perceptron either 
     [num_of_epoch] times on [lst], which is an association list of vectors and their 

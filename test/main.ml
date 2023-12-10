@@ -524,7 +524,7 @@ let mat_tests =
     ( "multiply different 3x3 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 5.0; 4.0; 3.0 |] m3_3_2 v3 );
     ( "multiply different 3x3 matrix by zero vector" >:: fun _ ->
-      mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_3_2 [| 0.0; 0.0; 0.0 |]);
+      mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_3_2 [| 0.0; 0.0; 0.0 |] );
     ( "multiply 3x4 matrix by a 3x4 zero-vector" >:: fun _ ->
       mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_4 v4 );
     ( "multiply 3x4 matrix by a 3x4 non zero-vector" >:: fun _ ->
@@ -641,6 +641,8 @@ let list_of_gate_vecs =
 let not_list = List.combine list_of_bool_vecs [ 1; 0 ]
 let and_list = List.combine list_of_gate_vecs [ 1; 0; 0; 0 ]
 let or_list = List.combine list_of_gate_vecs [ 1; 0; 1; 1 ]
+let nand_list = List.combine list_of_gate_vecs [ 0; 1; 1; 1 ]
+let xor_list = List.combine list_of_gate_vecs [ 0; 0; 1; 1 ]
 
 let perceptron_update_test (out : int) (in1 : Vector.t) =
   let result =
@@ -654,6 +656,11 @@ let perceptron_train_test (out : int) (in1 : (Vector.t * int) list)
   let result = Perceptron.train 0.2 0. 10 in1 p in
   let prediction = Perceptron.predict in2 result in
   assert_equal ~printer:string_of_int out prediction
+
+let check_xor_linearly_seperable_test _ =
+  let result = Perceptron.train 0.2 0. 10 xor_list gate_perceptron in
+  assert_bool "Linearly seperable"
+    (List.exists (fun (a, b) -> Perceptron.predict a result <> b) xor_list)
 
 let perceptron_tests =
   [
@@ -669,13 +676,28 @@ let perceptron_tests =
       perceptron_train_test 1 or_list
         (Vector.init [| 1.0; 0.0 |])
         gate_perceptron );
+    ( "trained nand perceptron" >:: fun _ ->
+      perceptron_train_test 0 nand_list
+        (Vector.init [| 1.0; 1.0 |])
+        gate_perceptron );
+    ( "xor is not linearly seperable" >:: fun _ ->
+      check_xor_linearly_seperable_test () );
   ]
 
 (*==============================================================================
                               LOADER TEST SUITE
 ==============================================================================*)
 
-let loader_test (out : Vector.t list) (in1 : string list)
+let loader_test (out : Vector.t) (in1 : string)
+    (trans : Bimage.Expr.pixel Bimage.Expr.t list) =
+  let x =
+    match Loader.to_vector_list [ in1 ] Bimage.gray trans with
+    | [ x ] -> x
+    | _ -> raise (Invalid_argument "wrong number of inputs")
+  in
+  assert_equal ~printer:Vector.to_string out x
+
+let loader_list_test (out : Vector.t list) (in1 : string list)
     (trans : Bimage.Expr.pixel Bimage.Expr.t list) =
   let x = Loader.to_vector_list in1 Bimage.gray trans in
   assert_equal ~printer:(pp_list Vector.to_string) out x
@@ -683,17 +705,22 @@ let loader_test (out : Vector.t list) (in1 : string list)
 let loader_tests =
   [
     ( "loader with one pixel" >:: fun _ ->
-      loader_test Vector.[ init [| 0. |] ] [ "./test/1x1.png" ] [] );
+      loader_test Vector.(init [| 0. |]) "./test/1x1.png" [] );
     ( "loader with one white pixel" >:: fun _ ->
       loader_test
-        Vector.[ init [| 1. |] ]
-        [ "./test/1x1.png" ]
+        Vector.(init [| 1. |])
+        "./test/1x1.png"
         [ Bimage.Expr.invert () ] );
     ( "loader with 2x2 image" >:: fun _ ->
-      loader_test Vector.[ init [| 0.; 0.; 1.; 0. |] ] [ "./test/2x2.png" ] []
-    );
-    ( "loader with image list" >:: fun _ ->
+      loader_test Vector.(init [| 0.; 0.; 1.; 0. |]) "./test/2x2.png" [] );
+    ( "loader with unwrapped 4x4 image" >:: fun _ ->
       loader_test
+        Vector.(
+          init
+            [| 0.; 1.; 1.; 1.; 1.; 1.; 1.; 0.; 1.; 1.; 1.; 1.; 1.; 1.; 0.; 1. |])
+        "./test/4x4.png" [] );
+    ( "loader with image list" >:: fun _ ->
+      loader_list_test
         Vector.[ init [| 0.; 0.; 1.; 0. |]; init [| 0. |] ]
         [ "./test/2x2.png"; "./test/1x1.png" ]
         [] );
