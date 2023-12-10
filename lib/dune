@@ -5,8 +5,3 @@
  (modules matrix perceptron vector loader)
  (instrumentation
   (backend bisect_ppx)))
-
-(executable
- (name loaderexample)
- (libraries ocraml bimage bimage-unix)
- (modules loaderexample))

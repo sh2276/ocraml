@@ -15,7 +15,7 @@ let hline width =
 type image_num = { mutable num : int }
 (* type image_name = { mutable name : string } *)
 
-let img_name = ref "./none.png"
+let cur_img_dir = ref "./none.png"
 
 let _ =
   print_endline
@@ -26,17 +26,23 @@ let _ =
   print_endline
     "What directory is your training data in? (This directory should only have \
      folders of training data, and each folder's name is the name of the label \
-     of the contents within.) : "
+     of the contents within):"
 
 let training_dir = input_line stdin
 
 let _ =
   print_endline
     "What directory is your input data in? (This directory should only have \
-     images that you want to run through the model. ): "
+     images that you want to run through the model): "
 
 (* Get list of input file paths and make a list of input image vectors*)
 let input_dir = input_line stdin
+
+(* Set default training and input dir if input is empty *)
+let training_dir = if training_dir = "" then "./strain/" else training_dir
+let input_dir = if input_dir = "" then "./input/" else input_dir
+
+(* Load files and preprocess *)
 let _ = print_endline "Loading files (might take a bit)..."
 let input_file_names = Loader.if_names input_dir
 
@@ -79,6 +85,7 @@ let vector_size =
   Vector.length first_vector
 
 let perceptron = ref (Perceptron.create vector_size train_classes)
+let epoch_count = ref 0
 
 let demo () =
   let width = 500 in
@@ -86,44 +93,43 @@ let demo () =
   (* Page 1: OCRaml overview *)
   let overview_text =
     "OCRaml is an optical character recognition tool designed to recognize \
-     handwritten digits. You have already uploaded your data and trained a \
-     perceptron model. Simply navigate to the next tab to see the results. You \
-     may click on each of the images you uploaded and see them. When you want \
-     to see what OCRaml has guessed your character to be (ADD INSTRUCTIONS)"
+     handwritten digits. You have already uploaded your data. The next tab \
+     contains controls to train our model. You can choose to train epochs, or \
+     you can also reset the model. An untrained or reset model will predict to \
+     be '1' The last tab displays all your input files as a button. Click one \
+     to select it, and then click 'Predict' to see what the model thinks it \
+     is."
   in
   let text_head =
     W.rich_text ~size:20 ~w:width ~h:30
       Text_display.(page [ bold (para "Welcome to OCRaml!") ])
   in
   let text = W.text_display ~w:width ~h:630 overview_text in
-  let page1 = L.tower [ L.resident text_head; L.resident text ] in
+  let logo_title = section_title "OCRaml -> ORCa ml" in
+  let logo = W.image ~w:(width / 2) "./bin/logo.png" in
+  let logo_layout = L.tower ~margins:0 [ L.resident logo; logo_title ] in
+  let page1 = L.tower [ L.resident text_head; L.resident text; logo_layout ] in
 
-  (* Page 2: Display Image *)
-  let image_title = section_title "Image display" in
+  (* Page 2: Training Controls *)
+  let image_title =
+    section_title "Choose the image you want to run the model on"
+  in
   let image_t_layout = L.tower ~margins:0 ~align:Draw.Center [ image_title ] in
 
-  (* let cur_image_name = { name = "none.png" } in *)
-
-  (* TODO: replace this image with uploaded image from page 1 *)
-  let cur_image = { num = 0 } in
-
-  let image () =
-    (* W.image ~w:(width / 2) (Printf.sprintf "uploads/%u.png" cur_image.num) *)
-    W.image ~w:(width / 2) (Printf.sprintf "%s" !img_name)
-  in
+  let image () = W.image ~w:(width / 2) (Printf.sprintf "%s" !cur_img_dir) in
 
   let image_layout = L.tower_of_w [ image () ] in
 
   let make_button button_str =
-    let button_start = W.button button_str in
+    let button_start = W.button button_str ~border_radius:10 in
     let start_action b _ _ =
       let bw = W.get_button b in
       let state = Button.state bw in
       if state then (
-        img_name := button_str;
+        cur_img_dir := button_str;
         L.set_rooms image_layout [ L.tower_of_w [ image () ] ];
         Button.reset bw;
-        print_endline !img_name)
+        print_endline ("Currently selected image" ^ !cur_img_dir))
     in
     let connected_button =
       W.connect ~priority:W.Replace button_start (image ()) start_action
@@ -132,78 +138,47 @@ let demo () =
     (button_start, connected_button)
   in
 
-  (* W.button button_str in *)
   let make_list file_names = List.map make_button file_names in
   let buttons_and_connections = make_list input_file_names in
   let input_button_list = List.map fst buttons_and_connections in
   let input_c_button_list = List.map snd buttons_and_connections in
 
-  let slider_title = section_title "Progress bar" in
-  let slider = W.slider ~kind:Slider.HBar 100 in
-  let percent = W.label "    0%" in
-  let set_percent w x = Label.set (W.get_label w) (Printf.sprintf "%u%%" x) in
-  let action w1 w2 _ =
-    let x = Slider.value (W.get_slider w1) in
-    set_percent w2 x
-  in
-  let events =
-    List.flatten
-      [ T.buttons_down; T.buttons_up; T.pointer_motion; [ Sdl.Event.key_down ] ]
-  in
-  let c_slider = W.connect slider percent action events in
-  let slider_l = L.resident ~background:L.theme_bg slider in
-  let slider_bar = L.flat ~align:Draw.Center [ slider_l; L.resident percent ] in
-  let slider_layout = L.tower ~margins:0 [ slider_title; slider_bar ] in
+  let epoch_label = W.label "Epochs trained: 0" in
 
-  let buttons_title = section_title "Inference Buttons" in
-  let button_reset = W.button ~border_radius:10 "Reset" in
+  let buttons_title = section_title "Training Controls" in
+  let button_reset = W.button ~border_radius:10 "Reset Training" in
+  let update c n = W.set_text c n in
   let click _ =
-    Slider.set (W.get_slider slider) 0;
-    Label.set (W.get_label percent) " 0%";
-    print_endline "clicked button"
+    print_endline "Reset Training";
+    perceptron := Perceptron.create vector_size train_classes;
+    epoch_count := 0;
+    update epoch_label ("Epochs trained: " ^ string_of_int !epoch_count)
   in
   W.on_click ~click button_reset;
-  let button_start =
-    W.button ~border_radius:10 ~kind:Button.Switch "Start computing"
-  in
-  let start_action b s ev =
+  let button_start = W.button ~border_radius:10 "Train 1 epoch" in
+  let update c n = W.set_text c n in
+  let start_action b _ ev =
     let bw = W.get_button b in
-    let sw = W.get_slider s in
     let state = Button.state bw in
+    if state then (
+      L.set_rooms image_layout [ L.tower_of_w [ image () ] ];
+      T.will_exit ev;
+      Button.reset bw;
 
-    if state then
-      let rec loop () =
-        let x = Slider.value sw in
-        if x >= 100 || T.should_exit ev then (
-          cur_image.num <- cur_image.num + 1;
-          L.set_rooms image_layout [ L.tower_of_w [ image () ] ];
-          T.will_exit ev;
-          Button.reset bw;
-
-          (* replace with perceptron inference *)
-          print_endline "pressed start computing";
-          perceptron := Perceptron.train 0.2 0. 100 labeled_images !perceptron;
-          print_endline "finished training")
-        else (
-          Slider.set sw (x + 1);
-          set_percent percent (x + 1);
-          W.update s;
-          T.nice_delay ev 0.05;
-          loop ())
-      in
-      loop ()
-    else W.update percent
+      (* replace with perceptron inference *)
+      print_endline "Start Training";
+      perceptron := Perceptron.train 0.2 0. 1 labeled_images !perceptron;
+      print_endline "Finished Training";
+      epoch_count := !epoch_count + 1;
+      update epoch_label ("Epochs trained: " ^ string_of_int !epoch_count))
   in
   let c_button =
-    W.connect ~priority:W.Replace button_start slider start_action T.buttons_up
+    W.connect ~priority:W.Replace button_start epoch_label start_action
+      T.buttons_up
   in
   let buttons_layout =
     L.tower ~margins:0
-      [
-        buttons_title;
-        L.flat_of_w [ button_reset; button_start ];
-        L.tower_of_w input_button_list;
-      ]
+      [ buttons_title; L.flat_of_w [ button_reset; button_start ] ]
   in
 
   let top =
@@ -211,18 +186,7 @@ let demo () =
   in
   L.set_width top width;
 
-  let page2 =
-    L.tower
-      [
-        image_t_layout;
-        hline width;
-        top;
-        buttons_layout;
-        hline width;
-        slider_layout;
-        hline width;
-      ]
-  in
+  let page2 = L.tower [ buttons_layout; L.tower_of_w [ epoch_label ] ] in
 
   (*page3*)
   let inference_title = section_title "Results" in
@@ -240,7 +204,7 @@ let demo () =
   let action _ =
     prediction :=
       Perceptron.predict
-        (List.assoc !img_name file_name_to_image_map)
+        (List.assoc !cur_img_dir file_name_to_image_map)
         !perceptron;
     update count !prediction;
     print_endline !prediction
@@ -249,17 +213,27 @@ let demo () =
 
   let page3 =
     L.tower
-      [ inference_layout; hline width; L.tower_of_w [ label; count; button ] ]
+      [
+        image_t_layout;
+        hline width;
+        top;
+        L.tower_of_w input_button_list;
+        inference_layout;
+        hline width;
+        L.tower_of_w [ label; count; button ];
+      ]
   in
 
   let tabs =
     Tabs.create ~slide:Avar.Right
-      [ ("OCRaml Info", page1); ("Display Image", page2); ("Results", page3) ]
+      [
+        ("OCRaml Info", page1);
+        ("Training Controls", page2);
+        ("Run Model", page3);
+      ]
   in
 
-  let board =
-    Main.make ([ c_slider; c_button ] @ input_c_button_list) [ tabs ]
-  in
+  let board = Main.make (c_button :: input_c_button_list) [ tabs ] in
   Main.run board
 
 let () = demo ()
