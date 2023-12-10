@@ -155,9 +155,11 @@ let demo () =
     update epoch_label ("Epochs trained: " ^ string_of_int !epoch_count)
   in
   W.on_click ~click button_reset;
-  let button_start = W.button ~border_radius:10 "Train 1 epoch" in
+  let button_epoch1 = W.button ~border_radius:10 "Train 1 epoch" in
+  let button_epoch2 = W.button ~border_radius:10 "Train 10 epochs" in
+  let button_epoch3 = W.button ~border_radius:10 "Train 100 epochs" in
   let update c n = W.set_text c n in
-  let start_action b _ ev =
+  let start_action_maker n b _ ev =
     let bw = W.get_button b in
     let state = Button.state bw in
     if state then (
@@ -167,18 +169,25 @@ let demo () =
 
       (* replace with perceptron inference *)
       print_endline "Start Training";
-      perceptron := Perceptron.train 0.2 0. 1 labeled_images !perceptron |> fst;
+      perceptron := Perceptron.train 0.2 0. n labeled_images !perceptron |> fst;
       print_endline "Finished Training";
-      epoch_count := !epoch_count + 1;
+      epoch_count := !epoch_count + n;
       update epoch_label ("Epochs trained: " ^ string_of_int !epoch_count))
   in
-  let c_button =
-    W.connect ~priority:W.Replace button_start epoch_label start_action
+  let create_c_button b n =
+    W.connect ~priority:W.Replace b epoch_label (start_action_maker n)
       T.buttons_up
   in
+  let c_button1 = create_c_button button_epoch1 1 in
+  let c_button2 = create_c_button button_epoch2 10 in
+  let c_button3 = create_c_button button_epoch3 100 in
   let buttons_layout =
     L.tower ~margins:0
-      [ buttons_title; L.flat_of_w [ button_reset; button_start ] ]
+      [
+        buttons_title;
+        L.flat_of_w
+          [ button_reset; button_epoch1; button_epoch2; button_epoch3 ];
+      ]
   in
 
   let top =
@@ -227,7 +236,11 @@ let demo () =
       ]
   in
 
-  let board = Main.make (c_button :: input_c_button_list) [ tabs ] in
+  let board =
+    Main.make
+      (c_button1 :: c_button2 :: c_button3 :: input_c_button_list)
+      [ tabs ]
+  in
   Main.run board
 
 let () = demo ()

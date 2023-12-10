@@ -787,6 +787,7 @@ let loader_tests =
           "./test/testtrain/6";
         ]
         "./test/testtrain/" );
+    ("shuffle no elements" >:: fun _ -> shuffle_test []);
     ("shuffle single element" >:: fun _ -> shuffle_test [ "test" ]);
     ("shuffle two elements" >:: fun _ -> shuffle_test [ "test1"; "test2" ]);
     ( "shuffle multi-element list" >:: fun _ ->
