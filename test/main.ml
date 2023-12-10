@@ -133,7 +133,53 @@ let vec_tests =
       vector_init_tester [| 0.0; 9.0; 8.0; 7.0; 6.0; 5.0; 4.0; 3.0 |] );
     ( " initialize vector of length 9 with specific values" >:: fun _ ->
       vector_init_tester [| 0.0; 9.0; 8.0; 7.0; 6.0; 5.0; 4.0; 3.0; 5.2 |] );
-    (* vector addition tests *)
+    ( "initialize vector of length 6 with specific values" >:: fun _ ->
+      vector_init_tester [| 1.0; 2.0; 3.0; 4.0; 5.0; 6.0 |] );
+    ( "initialize vector of length 12 with specific values" >:: fun _ ->
+      vector_init_tester
+        [| 2.0; 4.0; 6.0; 8.0; 10.0; 12.0; 14.0; 16.0; 18.0; 20.0; 22.0; 24.0 |]
+    );
+    ( "initialize vector of length 7 with specific values" >:: fun _ ->
+      vector_init_tester [| -1.0; -2.0; -3.0; -4.0; -5.0; -6.0; -7.0 |] );
+    ( "initialize vector of length 11 with specific values" >:: fun _ ->
+      vector_init_tester
+        [| 10.0; 9.0; 8.0; 7.0; 6.0; 5.0; 4.0; 3.0; 2.0; 1.0; 0.0 |] );
+    ( "initialize vector of length 14 with specific values" >:: fun _ ->
+      vector_init_tester
+        [|
+          0.5; 1.5; 2.5; 3.5; 4.5; 5.5; 6.5; 7.5; 8.5; 9.5; 10.5; 11.5; 12.5;
+          13.5;
+        |] );
+    ( "initialize vector of length 18 with specific values" >:: fun _ ->
+      vector_init_tester
+        [|
+          0.1; 0.2; 0.3; 0.4; 0.5; 0.6; 0.7; 0.8; 0.9; 1.0; 1.1; 1.2; 1.3; 1.4;
+          1.5; 1.6; 1.7; 1.8;
+        |] );
+    ( "initialize vector of length 25 with specific values" >:: fun _ ->
+      vector_init_tester
+        [|
+          -3.0; -2.5; -2.0; -1.5; -1.0; -0.5; 0.0; 0.5; 1.0; 1.5; 2.0; 2.5; 3.0;
+          3.5; 4.0; 4.5; 5.0; 5.5; 6.0; 6.5; 7.0; 7.5; 8.0; 8.5; 9.0;
+        |] );
+    ( "initialize vector of length 30 with specific values" >:: fun _ ->
+      vector_init_tester
+        [|
+          0.01; 0.02; 0.03; 0.04; 0.05; 0.06; 0.07; 0.08; 0.09; 0.1; 0.11; 0.12;
+          0.13; 0.14; 0.15; 0.16; 0.17; 0.18; 0.19; 0.2; 0.21; 0.22; 0.23; 0.24;
+          0.25; 0.26; 0.27; 0.28; 0.29; 0.3;
+        |] );
+    ( "initialize vector of length 13 with specific values" >:: fun _ ->
+      vector_init_tester
+        [|
+          -2.0; -1.5; -1.0; -0.5; 0.0; 0.5; 1.0; 1.5; 2.0; 2.5; 3.0; 3.5; 4.0;
+        |] );
+    ( "initialize vector of length 22 with specific values" >:: fun _ ->
+      vector_init_tester
+        [|
+          2.5; 2.4; 2.3; 2.2; 2.1; 2.0; 1.9; 1.8; 1.7; 1.6; 1.5; 1.4; 1.3; 1.2;
+          1.1; 1.0; 0.9; 0.8; 0.7; 0.6; 0.5; 0.4;
+        |] ); (* vector addition tests *)
     ( " add two empty vectors" >:: fun _ ->
       vector_a_s_tester [||] [||] [||] Vector.add );
     ( " add two vectors of length 5" >:: fun _ ->
@@ -234,7 +280,45 @@ let vec_tests =
           -0.5; -1.0; -1.5; -2.0; -2.5; 0.0; 0.5; 1.0; 1.5; 2.0; 2.5; 0.0; -0.5;
           -1.0; -1.5;
         |]
-        0.5 v15 ); (* vector dot product tests *)
+        0.5 v15 );
+    ( "multiply empty vector by 2.0" >:: fun _ ->
+      vector_s_mult_tester [||] 2.0 [||] );
+    ( "multiply vector of length 7 by -3.0" >:: fun _ ->
+      vector_s_mult_tester
+        [| -3.0; -6.0; -9.0; -12.0; -15.0; -18.0; -21.0 |]
+        (-3.0)
+        [| 1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0 |] );
+    ( "multiply vector of length 6 by -1.5" >:: fun _ ->
+      vector_s_mult_tester
+        [| -3.0; 6.0; -9.0; 12.0; -15.0; 18.0 |]
+        (-1.5)
+        [| 2.0; -4.0; 6.0; -8.0; 10.0; -12.0 |] );
+    ( "multiply vector of length 10 by 0.0" >:: fun _ ->
+      vector_s_mult_tester
+        [| 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0 |]
+        0.0
+        [| 1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0; 8.0; 9.0; 10.0 |] );
+    ( "multiply vector of length 5 by 0.5" >:: fun _ ->
+      vector_s_mult_tester
+        [| 1.0; 2.0; 3.0; 4.0; 5.0 |]
+        0.5
+        [| 2.0; 4.0; 6.0; 8.0; 10.0 |] );
+    ( "multiply vector of length 7 by -2.0" >:: fun _ ->
+      vector_s_mult_tester
+        [| -2.0; -4.0; -6.0; -8.0; -10.0; -12.0; -14.0 |]
+        (-2.0)
+        [| 1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0 |] );
+    ( "multiply vector of length 6 by 3.0" >:: fun _ ->
+      vector_s_mult_tester
+        [| -6.0; -12.0; 18.0; -24.0; 30.0; -36.0 |]
+        3.0
+        [| -2.0; -4.0; 6.0; -8.0; 10.0; -12.0 |] );
+    ( "multiply vector of length 8 by -0.5" >:: fun _ ->
+      vector_s_mult_tester
+        [| -0.05; -0.1; -0.15; -0.2; -0.25; -0.3; -0.35; -0.4 |]
+        (-0.5)
+        [| 0.1; 0.2; 0.3; 0.4; 0.5; 0.6; 0.7; 0.8 |] );
+    (* vector dot product tests *)
     ( "dot product of two singleton vectors" >:: fun _ ->
       vector_dprod_tester 0.0 [| 0.0 |] [| 0.0 |] );
     ( "dot product of two singleton vectors" >:: fun _ ->
