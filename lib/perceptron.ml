@@ -23,71 +23,59 @@ module Class = struct
   let num_of_classes lst = List.length lst
 end
 
-module type PerceptronType = sig
-  type 'a t
+type 'a return = 'a Class.t
+type 'a t = Matrix.t * Vector.t * 'a return
+(* AF: A perceptron [(m, b, f)] is represented by a tuple of a vector [m], a
+   float representing bias [b], and binding function [f] that maps the integers
+   [0, c - 1] to a set of results. RI: abs(b) < 1 *)
 
-  val create : int -> 'a list -> 'a t
-  val predict : Vector.t -> 'a t -> 'a
-  val update_weights : float -> 'a -> Vector.t -> 'a t -> 'a t
-  val train_all : float -> (Vector.t * 'a) list -> 'a t -> 'a t
-  val train_epoch : float -> int -> (Vector.t * 'a) list -> 'a t -> 'a t
-end
+let create num_inputs lst =
+  let c = Class.create lst in
+  let num_classes = Class.num_of_classes c in
+  let weights = Matrix.init (Array.make_matrix num_inputs num_classes 0.0) in
+  let biases = Vector.init (Array.make num_classes 0.0) in
+  (weights, biases, c)
 
-module Perceptron : PerceptronType = struct
-  type 'a return = 'a Class.t
-  type 'a t = Matrix.t * Vector.t * 'a return
-  (* AF: A perceptron [(m, b, f)] is represented by a tuple of a vector [m], a
-     float representing bias [b], and binding function [f] that maps the
-     integers [0, c - 1] to a set of results. RI: abs(b) < 1 *)
+let predict inputs (m, b, f) =
+  let open Matrix in
+  let m = transpose m in
+  assert_m_v_dim m inputs;
+  let unbiased = m @ inputs in
+  let open Vector in
+  unbiased + b |> argmax |> Class.get f
 
-  let create num_inputs lst =
-    let c = Class.create lst in
-    let num_classes = Class.num_of_classes c in
-    let weights = Matrix.init (Array.make_matrix num_inputs num_classes 0.0) in
-    let biases = Vector.init (Array.make num_classes 0.0) in
-    (weights, biases, c)
+let update_weights learning_rate expected inputs (m, b, f) =
+  let actual = predict inputs (m, b, f) in
+  if expected = actual then (m, b, f)
+  else
+    let target = Array.make (Vector.length b) 0.0 in
+    target.(Class.index f actual) <- -1.0;
+    target.(Class.index f expected) <- 1.0;
+    let target_v = Vector.init target in
 
-  let predict inputs (m, b, f) =
-    let open Matrix in
-    let m = transpose m in
-    assert_m_v_dim m inputs;
-    let unbiased = m @ inputs in
-    let open Vector in
-    unbiased + b |> argmax |> Class.get f
-
-  let update_weights learning_rate expected inputs (m, b, f) =
-    let actual = predict inputs (m, b, f) in
-    if expected = actual then (m, b, f)
-    else
-      let target = Array.make (Vector.length b) 0.0 in
-      target.(Class.index f actual) <- -1.0;
-      target.(Class.index f expected) <- 1.0;
-      let target_v = Vector.init target in
-
-      let error = Vector.(target_v |> ( * ) learning_rate) in
-      let add_w =
-        Matrix.(
-          ([| Vector.to_array error |] |> init |> transpose)
-          * init [| Vector.(inputs |> to_array) |]
-          |> transpose)
-      in
-      (Matrix.(m + add_w), Vector.(b + error), f)
-
-  let train_all rate lst perceptron =
-    let rec train_aux lst acc =
-      match lst with
-      | [] -> acc
-      | (v, e) :: t ->
-          let newp = update_weights rate e v acc in
-          train_aux t newp
+    let error = Vector.(target_v |> ( * ) learning_rate) in
+    let add_w =
+      Matrix.(
+        ([| Vector.to_array error |] |> init |> transpose)
+        * init [| Vector.(inputs |> to_array) |]
+        |> transpose)
     in
-    train_aux lst perceptron
+    (Matrix.(m + add_w), Vector.(b + error), f)
 
-  let train_epoch rate num lst perceptron =
-    let rec train_aux num perceptron =
-      match num with
-      | 0 -> perceptron
-      | _ -> train_aux Stdlib.(num - 1) (train_all rate lst perceptron)
-    in
-    train_aux num perceptron
-end
+let train_all rate lst perceptron =
+  let rec train_aux lst acc =
+    match lst with
+    | [] -> acc
+    | (v, e) :: t ->
+        let newp = update_weights rate e v acc in
+        train_aux t newp
+  in
+  train_aux lst perceptron
+
+let train_epoch rate num lst perceptron =
+  let rec train_aux num perceptron =
+    match num with
+    | 0 -> perceptron
+    | _ -> train_aux Stdlib.(num - 1) (train_all rate lst perceptron)
+  in
+  train_aux num perceptron
