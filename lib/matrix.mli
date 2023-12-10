@@ -5,6 +5,11 @@
     Python's numpy, for use in data pipelines and developing machine learning
     models. *)
 
+(* To be transparent, not all functions in this module were directly used by the 
+   perceptron or Loader, but this module was rather designed beforehand to 
+   provide a suite of linear algebra functions to draw from in case we wanted
+   to expand our perceptron or loader. *)
+
 type t
 (** Representation type of [Matrix].*)
 
