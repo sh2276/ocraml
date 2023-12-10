@@ -50,3 +50,4 @@ let dir_to_matrix dir colortype transformations =
   let out = to_matrix files colortype transformations in
   let _ = print_endline "files loaded" in
   out
+(* let to_vector_list files colortype transformations = *)

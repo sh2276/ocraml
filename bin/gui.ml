@@ -3,7 +3,8 @@ module W = Widget
 module L = Layout
 module T = Trigger
 open Tsdl
-(* open Ocraml open Bimage *)
+open Ocraml
+open Bimage
 
 let section_title s = L.flat_of_w [ W.label ~size:12 ~fg:Draw.(opaque grey) s ]
 
@@ -45,37 +46,59 @@ let input_files =
   List.map (fun x -> input_dir ^ x) (Array.to_list (Sys.readdir input_dir))
 
 (* Get list of training file paths *)
-(* let train_folders = List.map (fun x -> training_dir ^ x) (Array.to_list
-   (Sys.readdir training_dir)) *)
+let train_folders =
+  List.map
+    (fun x -> (training_dir ^ x, int_of_string x))
+    (Array.to_list (Sys.readdir training_dir))
 
-(* let train_files = List.map (fun x -> List.map (fun y -> x ^ "/" ^ y)
-   (Array.to_list (Sys.readdir x))) train_folders *)
+let train_files =
+  List.map
+    (fun x -> List.map (fun y -> x ^ "/" ^ y) (Array.to_list (Sys.readdir x)))
+    train_folders
 
 (* Shuffle the list *)
-(* let _ = Random.self_init ()
+let _ = Random.self_init ()
 
-   let fisher_yates_shuffle arr = let len = Array.length arr in for i = 0 to len
-   - 2 do let j = Random.int (len - i) + i in let temp = arr.(i) in arr.(i) <-
-   arr.(j); arr.(j) <- temp done
+let fisher_yates_shuffle arr =
+  let len = Array.length arr in
+  for i = 0 to len - 2 do
+    let j = Random.int (len - i) + i in
+    let temp = arr.(i) in
+    arr.(i) <- arr.(j);
+    arr.(j) <- temp
+  done
 
-   let shuffle_list lst = let arr = Array.of_list lst in fisher_yates_shuffle
-   arr; Array.to_list arr
+let shuffle_list lst =
+  let arr = Array.of_list lst in
+  fisher_yates_shuffle arr;
+  Array.to_list arr
 
-   let train_files = List.flatten train_files let train_files = shuffle_list
-   train_files let _ = List.map print_string train_files let image_matrix =
-   Loader.to_matrix train_files gray [] let _ = print_endline (string_of_int
-   (Matrix.num_rows image_matrix)) let _ = print_endline (string_of_int
-   (Matrix.num_cols image_matrix)) *)
+let train_files = List.flatten train_files
+let train_files = shuffle_list train_files
+let _ = List.map print_string train_files
+let image_matrix = Loader.to_matrix train_files gray []
+(* let _ = print_endline (string_of_int (Matrix.num_rows image_matrix)) let _ =
+   print_endline (string_of_int (Matrix.num_cols image_matrix)) *)
 
-(* module Perceptron = Perceptron.Perceptron *)
+module Perceptron = Perceptron.Perceptron
 
-(* let perceptron = Perceptron.create (Matrix.num_cols image_matrix) [ "0"; "1";
-   "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9" ]
+let perceptron =
+  Perceptron.create
+    (Matrix.num_cols image_matrix)
+    [ 0; 1; 2; 3; 4; 5; 6; 7; 8; 9 ]
 
-   let f x = () let _ = f perceptron *)
-
-(* let train image_matrix = List.iter (fun x -> let _ =
-   Perceptron.update_weights 0.1 x image_matrix) *)
+let train_n rate lst perceptron =
+  let rec train_aux lst acc =
+    match lst with
+    | [] -> acc
+    | (v, e) :: t ->
+        let newp =
+          print_endline (string_of_int e);
+          Perceptron.update_weights rate e (Vector.init v) acc
+        in
+        train_aux t newp
+  in
+  train_aux lst perceptron
 
 let demo () =
   let _ = List.map print_endline input_files in
