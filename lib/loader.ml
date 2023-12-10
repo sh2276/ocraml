@@ -39,6 +39,27 @@ let to_vector_list files colortype transformations =
   in
   List.map (fun x -> Vector.init (Array.of_list x)) vallistlist
 
+let vallist_to_stringlist (val_list : float list) =
+  let rec helper val_list acc =
+    match val_list with
+    | [] -> acc
+    | h :: t -> helper t (string_of_float h :: acc)
+  in
+  List.rev (helper val_list [])
+
+let vallistlist_to_stringlistlist (val_listlist : 'a list list) =
+  List.map vallist_to_stringlist val_listlist
+
+let to_string files colortype transformations =
+  let vlist = to_vector_list files colortype transformations in
+  let out = "" in
+  let helper vlist acc =
+    match vlist with
+    | [] -> acc
+    | h :: t -> acc ^ ", " ^ Vector.to_string h
+  in
+  helper vlist out
+
 (* gets a list of files in the directory [dir] *)
 let if_names in_dir =
   List.map (fun x -> in_dir ^ x) (Array.to_list (Sys.readdir in_dir))

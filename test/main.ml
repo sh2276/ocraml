@@ -10,8 +10,9 @@
     developed using both glass and black-box testing. The core perceptron
     algorithm will be tested using glass box tests on simple logic gates in
     order to demonstrate functionality. The Loader will be tested on simple
-    input files. The GUI and full OCR perceptron will be tested through user
-    testing.
+    input files. It will also be tested by using its to_string function on
+    actual images we will use. The GUI and full OCR perceptron will be tested
+    through user testing.
 
     This testing approach demonstrates the correctness of the system, as it
     ensures that some untestable features of our system that depend on core,
