@@ -318,6 +318,30 @@ let vec_tests =
       vector_argmax_tester 10 v15 );
     ( "argmax of vector with the same values" >:: fun _ ->
       vector_argmax_tester 0 [| 1.; 1. |] );
+    ( "argmax of zero vector" >:: fun _ ->
+      vector_argmax_tester 0
+        [|
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+          0.;
+        |] );
   ]
 
 (*==============================================================================
@@ -409,6 +433,8 @@ let m3_4 =
 
 let m4_2 = [| [| 4.0; 1.0 |]; [| 4.0; 2.0 |]; [| 2.0; 3.0 |]; [| 4.0; 5.0 |] |]
 let v3 = [| 1.0; 2.0; 3.0 |]
+let v4 = [| 0.0; 0.0; 0.0; 0.0 |]
+let v4_1 = [| 0.1; 2.0; 4.1; 4.2 |]
 
 (** Matrix Test Cases *)
 let mat_tests =
@@ -421,9 +447,28 @@ let mat_tests =
     ("check 3x3 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_3 3 3);
     ("check 3x4 matrix dimensions" >:: fun _ -> matrix_dim_tester m3_4 3 4);
     ("check 4x2 matrix dimensions" >:: fun _ -> matrix_dim_tester m4_2 4 2);
+    ( "check dimensions of product of 3x4 and 4x2 matrix" >:: fun _ ->
+      matrix_dim_tester
+        (Matrix.to_array
+           (Matrix.mat_mat_prod (Matrix.init m3_4) (Matrix.init m4_2)))
+        3 2 );
+    ( "check dimensions of product of 3x3 and 3x3 matrix" >:: fun _ ->
+      matrix_dim_tester
+        (Matrix.to_array
+           (Matrix.mat_mat_prod (Matrix.init m3_3) (Matrix.init m3_3_2)))
+        3 3 );
+    ( "check dimensions of product of other 3x3 and 3x3 matrix" >:: fun _ ->
+      matrix_dim_tester
+        (Matrix.to_array
+           (Matrix.mat_mat_prod (Matrix.init m3_3) (Matrix.init m3_3)))
+        3 3 );
     (* Matrix-vector multiplication tests *)
     ( "multiply 3x3 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 14.0; 32.0; 50.0 |] m3_3 v3 );
+    ( "multiply 3x4 matrix by a 3x4 zero-vector" >:: fun _ ->
+      mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_4 v4 );
+    ( "multiply 3x4 matrix by a 3x4 non zero-vector" >:: fun _ ->
+      mat_vec_prod_tester [| 33.2; 74.8; 116.4 |] m3_4 v4_1 );
     ( "multiply 4x2 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 6.0; 8.0; 8.0; 14.0 |] m4_2 [| 1.0; 2.0 |] );
     (* Matrix-matrix multiplication tests *)
@@ -441,6 +486,16 @@ let mat_tests =
         [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |] |]
         [| [| 0.0; 1.0 |]; [| 1.0; 2.0 |] |]
         [| [| 1.0; 1.0 |]; [| 2.0; 2.0 |] |] );
+    ( "add other 2x2 matrices" >:: fun _ ->
+      mat_mat_add_tester
+        [| [| 1.1; 2.1 |]; [| 3.1; 4.1 |] |]
+        [| [| 0.0; 1.0 |]; [| 1.0; 2.0 |] |]
+        [| [| 1.1; 1.1 |]; [| 2.1; 2.1 |] |] );
+    ( "add 3x2 matrices" >:: fun _ ->
+      mat_mat_add_tester
+        [| [| 1.1; 2.1 |]; [| 3.1; 4.1 |]; [| 5.1; 6.1 |] |]
+        [| [| 0.0; 1.0 |]; [| 1.0; 2.0 |]; [| 2.0; 3.0 |] |]
+        [| [| 1.1; 1.1 |]; [| 2.1; 2.1 |]; [| 3.1; 3.1 |] |] );
     (* Matrix transpose test *)
     ( "transpose 3x3 matrix" >:: fun _ ->
       matrix_transpose_tester m3_3
@@ -463,6 +518,7 @@ let mat_tests =
     ("convert 3x3 matrix to array" >:: fun _ -> matrix_init_tester m3_3);
     ("convert 3x4 matrix to array" >:: fun _ -> matrix_init_tester m3_4);
     ("convert 4x2 matrix to array" >:: fun _ -> matrix_init_tester m4_2);
+    ("convert 3x3 matrix to array" >:: fun _ -> matrix_init_tester m3_3_2);
   ]
 
 (*==============================================================================
