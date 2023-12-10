@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>perceptron.ml &mdash; Coverage report</title>
+    <meta name="description" content="96.67% coverage in lib/perceptron.ml">
+    <link rel="stylesheet" href="../coverage.css"/>
+    <script src="../highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="../index.html">
+          <span class="dirname">lib/</span>perceptron.ml
+        </a>
+      </h1>
+      <h2>96.67%</h2>
+    </div>
+    <div id="navbar">
+      <span class="unvisited" style="top:20.62%"></span>
+      <span class="some-visited" style="bottom:2.06%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span > </span>
+<a id="L7"></a><span > </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span > </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span class="visited"> </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span class="visited"> </span>
+<a id="L15"></a><span > </span>
+<a id="L16"></a><span > </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span class="visited"> </span>
+<a id="L19"></a><span class="visited"> </span>
+<a id="L20"></a><span class="unvisited"> </span>
+<a id="L21"></a><span class="visited"> </span>
+<a id="L22"></a><span > </span>
+<a id="L23"></a><span > </span>
+<a id="L24"></a><span > </span>
+<a id="L25"></a><span > </span>
+<a id="L26"></a><span class="visited"> </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span > </span>
+<a id="L29"></a><span > </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span > </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span > </span>
+<a id="L35"></a><span class="visited"> </span>
+<a id="L36"></a><span class="visited"> </span>
+<a id="L37"></a><span class="visited"> </span>
+<a id="L38"></a><span class="visited"> </span>
+<a id="L39"></a><span class="visited"> </span>
+<a id="L40"></a><span > </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span class="visited"> </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span class="visited"> </span>
+<a id="L45"></a><span class="visited"> </span>
+<a id="L46"></a><span > </span>
+<a id="L47"></a><span class="visited"> </span>
+<a id="L48"></a><span > </span>
+<a id="L49"></a><span > </span>
+<a id="L50"></a><span class="visited"> </span>
+<a id="L51"></a><span class="visited"> </span>
+<a id="L52"></a><span > </span>
+<a id="L53"></a><span class="visited"> </span>
+<a id="L54"></a><span class="visited"> </span>
+<a id="L55"></a><span class="visited"> </span>
+<a id="L56"></a><span class="visited"> </span>
+<a id="L57"></a><span > </span>
+<a id="L58"></a><span class="visited"> </span>
+<a id="L59"></a><span > </span>
+<a id="L60"></a><span > </span>
+<a id="L61"></a><span class="visited"> </span>
+<a id="L62"></a><span class="visited"> </span>
+<a id="L63"></a><span class="visited"> </span>
+<a id="L64"></a><span > </span>
+<a id="L65"></a><span > </span>
+<a id="L66"></a><span > </span>
+<a id="L67"></a><span > </span>
+<a id="L68"></a><span class="visited"> </span>
+<a id="L69"></a><span class="visited"> </span>
+<a id="L70"></a><span class="visited"> </span>
+<a id="L71"></a><span class="visited"> </span>
+<a id="L72"></a><span > </span>
+<a id="L73"></a><span class="visited"> </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span > </span>
+<a id="L76"></a><span > </span>
+<a id="L77"></a><span > </span>
+<a id="L78"></a><span class="visited"> </span>
+<a id="L79"></a><span class="visited"> </span>
+<a id="L80"></a><span class="visited"> </span>
+<a id="L81"></a><span class="visited"> </span>
+<a id="L82"></a><span > </span>
+<a id="L83"></a><span class="visited"> </span>
+<a id="L84"></a><span > </span>
+<a id="L85"></a><span > </span>
+<a id="L86"></a><span > </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span class="visited"> </span>
+<a id="L89"></a><span class="visited"> </span>
+<a id="L90"></a><span class="visited"> </span>
+<a id="L91"></a><span class="visited"> </span>
+<a id="L92"></a><span > </span>
+<a id="L93"></a><span class="visited"> </span>
+<a id="L94"></a><span class="visited"> </span>
+<a id="L95"></a><span class="some-visited"> </span>
+<a id="L96"></a><span > </span>
+<a id="L97"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1"> 1</a>
+<a href="#L2"> 2</a>
+<a href="#L3"> 3</a>
+<a href="#L4"> 4</a>
+<a href="#L5"> 5</a>
+<a href="#L6"> 6</a>
+<a href="#L7"> 7</a>
+<a href="#L8"> 8</a>
+<a href="#L9"> 9</a>
+<a href="#L10">10</a>
+<a href="#L11">11</a>
+<a href="#L12">12</a>
+<a href="#L13">13</a>
+<a href="#L14">14</a>
+<a href="#L15">15</a>
+<a href="#L16">16</a>
+<a href="#L17">17</a>
+<a href="#L18">18</a>
+<a href="#L19">19</a>
+<a href="#L20">20</a>
+<a href="#L21">21</a>
+<a href="#L22">22</a>
+<a href="#L23">23</a>
+<a href="#L24">24</a>
+<a href="#L25">25</a>
+<a href="#L26">26</a>
+<a href="#L27">27</a>
+<a href="#L28">28</a>
+<a href="#L29">29</a>
+<a href="#L30">30</a>
+<a href="#L31">31</a>
+<a href="#L32">32</a>
+<a href="#L33">33</a>
+<a href="#L34">34</a>
+<a href="#L35">35</a>
+<a href="#L36">36</a>
+<a href="#L37">37</a>
+<a href="#L38">38</a>
+<a href="#L39">39</a>
+<a href="#L40">40</a>
+<a href="#L41">41</a>
+<a href="#L42">42</a>
+<a href="#L43">43</a>
+<a href="#L44">44</a>
+<a href="#L45">45</a>
+<a href="#L46">46</a>
+<a href="#L47">47</a>
+<a href="#L48">48</a>
+<a href="#L49">49</a>
+<a href="#L50">50</a>
+<a href="#L51">51</a>
+<a href="#L52">52</a>
+<a href="#L53">53</a>
+<a href="#L54">54</a>
+<a href="#L55">55</a>
+<a href="#L56">56</a>
+<a href="#L57">57</a>
+<a href="#L58">58</a>
+<a href="#L59">59</a>
+<a href="#L60">60</a>
+<a href="#L61">61</a>
+<a href="#L62">62</a>
+<a href="#L63">63</a>
+<a href="#L64">64</a>
+<a href="#L65">65</a>
+<a href="#L66">66</a>
+<a href="#L67">67</a>
+<a href="#L68">68</a>
+<a href="#L69">69</a>
+<a href="#L70">70</a>
+<a href="#L71">71</a>
+<a href="#L72">72</a>
+<a href="#L73">73</a>
+<a href="#L74">74</a>
+<a href="#L75">75</a>
+<a href="#L76">76</a>
+<a href="#L77">77</a>
+<a href="#L78">78</a>
+<a href="#L79">79</a>
+<a href="#L80">80</a>
+<a href="#L81">81</a>
+<a href="#L82">82</a>
+<a href="#L83">83</a>
+<a href="#L84">84</a>
+<a href="#L85">85</a>
+<a href="#L86">86</a>
+<a href="#L87">87</a>
+<a href="#L88">88</a>
+<a href="#L89">89</a>
+<a href="#L90">90</a>
+<a href="#L91">91</a>
+<a href="#L92">92</a>
+<a href="#L93">93</a>
+<a href="#L94">94</a>
+<a href="#L95">95</a>
+<a href="#L96">96</a>
+<a href="#L97">97</a>
+</pre>
+<pre><code class="ocaml">(** A [Class] is an util-module that generifies nessecary types and relevant
+    helper functions. Given a list of classifications, it can map it between
+    distinct integers and vice versa. *)
+module Class = struct
+  (** The representation type of a [Class]. *)
+  type 'a t = 'a list
+  (** AF: A map from index to class through a list. RI: List elements must be
+      unique. *)
+
+  (** [create lst] creates a new [Class] with the list of classes provided. *)
+  let create lst = <span data-count="30">l</span>st
+
+  (** [get classes n] will return the [n]th class *)
+  let get lst n = <span data-count="205">L</span>ist.nth lst n
+
+  (** [index classes r] will return the binding with [r] as the result. *)
+  let index lst n =
+    <span data-count="32">l</span>et rec index_aux lst acc =
+      <span data-count="48">m</span>atch lst with
+      | <span data-count="0">[</span>] -&gt; raise (Failure "not found")
+      | <span data-count="48">h</span> :: t -&gt; if n = h then <span data-count="32">a</span>cc else <span data-count="16">i</span>ndex_aux t (acc + 1)
+    in
+    index_aux lst 0
+
+  (** [num_of_classes] will return the number of classes in a [Class]. *)
+  let num_of_classes lst = <span data-count="30">L</span>ist.length lst
+end
+
+type 'a t = Matrix.t * Vector.t * 'a Class.t
+(* AF: A perceptron [(m, b, f)] is represented by a tuple of a vector [m], a
+   float representing bias [b], and binding function [f] that maps the integers
+   [0, c - 1] to a set of results. RI: abs(b) &lt; 1 *)
+
+let create num_inputs lst =
+  <span data-count="30">l</span>et c = Class.create lst in
+  <span data-count="30">l</span>et num_classes = Class.num_of_classes c in
+  <span data-count="30">l</span>et weights = Matrix.init (Array.make_matri<span data-count="30">x</span> num_inputs num_classes 0.0) in
+  <span data-count="30">l</span>et biases = Vector.init (Array.mak<span data-count="30">e</span> num_classes 0.0) in
+  <span data-count="30">(</span>weights, biases, c)
+
+let predict inputs (m, b, f) =
+  <span data-count="205">l</span>et open Matrix in
+  let m = transpose m in
+  <span data-count="205">a</span>ssert_m_v_dim m inputs;
+  <span data-count="205">l</span>et unbiased = m @ inputs in
+  let open Vector in
+  unbiased + b |&gt; argmax |&gt; <span data-count="205">C</span>lass.get f
+
+let update_weights learning_rate inputs expected (m, b, f) =
+  <span data-count="101">l</span>et actual = predict inputs (m, b, f) in
+  <span data-count="101">i</span>f expected = actual then <span data-count="85">(</span>m, b, f)
+  else
+    <span data-count="16">l</span>et target = Array.make (Vector.lengt<span data-count="16">h</span> b) 0.0 in
+    <span data-count="16">t</span>arget.(Class.inde<span data-count="16">x</span> f actual) &lt;- -1.0;
+    <span data-count="16">t</span>arget.(Class.inde<span data-count="16">x</span> f expected) &lt;- 1.0;
+    <span data-count="16">l</span>et target_v = Vector.init target in
+
+    <span data-count="16">l</span>et error = Vector.(target_v |&gt; ( * <span data-count="16">)</span> learning_rate) in
+    let add_w =
+      Matrix.(
+        ([| Vector.to_arra<span data-count="16">y</span> error |] |&gt; init |&gt; <span data-count="16">t</span>ranspos<span data-count="16">e</span>)
+        * ini<span data-count="16">t</span> [| Vector.(inputs |&gt; to_arra<span data-count="16">y</span>) |]
+        |&gt; transpos<span data-count="16">e</span>)
+    in
+    (Matrix.(m + add_w), Vector.(b + error), f)
+
+let train_once rate lst perceptron =
+  <span data-count="30">l</span>et rec train_aux lst acc =
+    <span data-count="130">m</span>atch lst with
+    | <span data-count="30">[</span>] -&gt; acc
+    | <span data-count="100">(</span>v, e) :: t -&gt;
+        let newp = update_weights rate v e acc in
+        <span data-count="100">t</span>rain_aux t newp
+  in
+  train_aux lst perceptron
+
+let num_of_errors lst perceptron =
+  <span data-count="30">l</span>et rec tally lst acc =
+    <span data-count="130">m</span>atch lst with
+    | <span data-count="30">[</span>] -&gt; acc
+    | <span data-count="100">(</span>v, e) :: t -&gt;
+        let p = predict v perceptron in
+        <span data-count="100">i</span>f p = e then <span data-count="96">t</span>ally t acc else <span data-count="4">t</span>ally t (acc +. 1.)
+  in
+  tally lst 0.
+
+let train rate margin num lst perceptron =
+  <span data-count="3">l</span>et rec train_aux num perceptron =
+    <span data-count="33">m</span>atch num with
+    | <span data-count="3">0</span> -&gt; perceptron
+    | <span data-count="30">_</span> -&gt;
+        let newp = train_once rate lst perceptron in
+        <span data-count="30">l</span>et len = List.length lst |&gt; <span data-count="30">f</span>loat_of_int in
+        <span data-count="30">l</span>et e = num_of_errors lst newp in
+        <span data-count="30">i</span>f e /. len &lt; margin then <span data-count="0">p</span>erceptron else <span data-count="30">t</span>rain_aux (num - 1) newp
+  in
+  train_aux num perceptron
+</code></pre>
+      </div>
+    </div>
+    <script src="../coverage.js"></script>
+  </body>
+</html>
