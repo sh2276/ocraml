@@ -1,3 +1,5 @@
+(** Module to load image data for use in training and running perceptron model.*)
+
 open Bimage
 open Bimage.Expr
 (* (** A [LoaderSpec] specifies which files will be loaded in and the
