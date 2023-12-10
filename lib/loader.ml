@@ -1,13 +1,17 @@
 open Bimage
 open Bimage_unix
 
+(* Loads the image from the given path with a certain color type to a Bimage
+   Image*)
 let file_to_img colorType file =
   match Magick.read f32 colorType file with
   | Ok img -> img
   | Error e -> failwith (Error.to_string e)
 
+(* Applies file_to_img to all file paths in a given list *)
 let files_to_imglist colorType files = List.map (file_to_img colorType) files
 
+(* Applies transformations in a given transformation list to the image *)
 let rec transform_image remaining_transforms img =
   match remaining_transforms with
   | [] -> img
@@ -15,40 +19,18 @@ let rec transform_image remaining_transforms img =
       let _ = Filter.v h ~output:img [| Image.any img |] in
       transform_image t img
 
+(* Applies transform_image to a list of images *)
 let transform_all_images transformations img_list =
   List.map (transform_image transformations) img_list
 
+(* Transforms a Bimage Image to a list of numbers representing each pixel *)
 let listify img = Array.to_list (Data.to_array (Image.data img))
+
+(* Applies listify to a list of images *)
 let listify_n img_list = List.map listify img_list
 
-let strings_of_list (val_list : float list) =
-  let rec helper val_list acc =
-    match val_list with
-    | [] -> acc
-    | h :: t -> helper t (string_of_float h :: acc)
-  in
-  List.rev (helper val_list [])
-
-let strings_of_list_list (val_listlist : float list list) =
-  List.map strings_of_list val_listlist
-
-(* let to_matrix files colortype transformations = let vallistlist =
-   files_to_imglist colortype files |> transform_all_images transformations |>
-   imglist_to_vallistlist in let valarrarr = Array.of_list (List.map
-   Array.of_list vallistlist) in Matrix.init valarrarr *)
-
-(* let to_string files colortype transformations = Matrix.to_string (to_matrix
-   files colortype transformations) *)
-
-(* let dir_to_matrix dir colortype transformations = let files = Sys.readdir dir
-   in let files = List.map (fun x -> dir ^ x) (Array.to_list files) in let out =
-   to_matrix files colortype transformations in let _ = print_endline "files
-   loaded" in out *)
-
-(** [to_vector_list filelist color [transformations]] converts a list of file
-    paths relative to the root of the project to a list of vectors that
-    represent each image after being read with the color and after having the
-    transformations applied to each. *)
+(* Converts a list of files, given a color type and list of transformations, to
+   a list or Vectors, each representing an image. *)
 let to_vector_list files colortype transformations =
   let vallistlist =
     files_to_imglist colortype files
