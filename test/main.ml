@@ -479,46 +479,51 @@ let mat_tests =
     ("convert 4x2 matrix to array" >:: fun _ -> matrix_init_tester m4_2);
   ]
 
-let loader_tests = []
-
 (*==============================================================================
                             PERCEPTRON TEST SUITE
 ==============================================================================*)
 
-let bool_perceptron = Perceptron.Perceptron.create 2 [ 0; 1 ]
+let bool_perceptron = Perceptron.create 2 [ 0; 1 ]
 
-let and_list =
-  Vector.
-    [
-      (init [| 1.0; 1.0 |], 1);
-      (init [| 0.0; 0.0 |], 0);
-      (init [| 1.0; 0.0 |], 0);
-      (init [| 0.0; 1.0 |], 0);
-    ]
+let list_of_gate_vecs =
+  List.map
+    (fun x -> Vector.init x)
+    [ [| 1.; 1. |]; [| 0.; 0. |]; [| 0.; 1. |]; [| 1.; 0. |] ]
+
+let and_list = List.combine list_of_gate_vecs [ 1; 0; 0; 0 ]
+let or_list = List.combine list_of_gate_vecs [ 1; 0; 1; 1 ]
 
 let perceptron_base_test (out : int) (in1 : Vector.t) =
   let result =
-    Perceptron.Perceptron.update_weights 0.2 1
-      (Vector.init [| 1.0; 1.0 |])
-      bool_perceptron
+    Perceptron.update_weights 0.2 1 (Vector.init [| 1.0; 1.0 |]) bool_perceptron
   in
-  let prediction = Perceptron.Perceptron.predict in1 result in
+  let prediction = Perceptron.predict in1 result in
   assert_equal out prediction
 
 let perceptron_and_test (out : int) (in1 : Vector.t) =
-  let result =
-    Perceptron.Perceptron.train_epoch 0.2 6 and_list bool_perceptron
-  in
-  let prediction = Perceptron.Perceptron.predict in1 result in
+  let result = Perceptron.train_epoch 0.2 10 and_list bool_perceptron in
+  let prediction = Perceptron.predict in1 result in
+  assert_equal out prediction
+
+let perceptron_or_test (out : int) (in1 : Vector.t) =
+  let result = Perceptron.train_epoch 0.2 10 or_list bool_perceptron in
+  let prediction = Perceptron.predict in1 result in
   assert_equal out prediction
 
 let perceptron_tests =
   [
-    ( "and perceptron1" >:: fun _ ->
+    ( "perceptron with one update" >:: fun _ ->
       perceptron_base_test 1 (Vector.init [| 1.0; 1.0 |]) );
-    ( "and perceptron" >:: fun _ ->
+    ( "trained and perceptron" >:: fun _ ->
       perceptron_and_test 1 (Vector.init [| 1.0; 1.0 |]) );
+    ( "trained or perceptron" >:: fun _ ->
+      perceptron_or_test 1 (Vector.init [| 1.0; 0.0 |]) );
   ]
+
+(*==============================================================================
+                              LOADER TEST SUITE
+==============================================================================*)
+let loader_tests = []
 
 let suite =
   "ocraml test suite"

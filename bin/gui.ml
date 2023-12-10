@@ -80,8 +80,6 @@ let image_matrix = Loader.to_matrix train_files gray []
 (* let _ = print_endline (string_of_int (Matrix.num_rows image_matrix)) let _ =
    print_endline (string_of_int (Matrix.num_cols image_matrix)) *)
 
-module Perceptron = Perceptron.Perceptron
-
 let perceptron =
   Perceptron.create
     (Matrix.num_cols image_matrix)
