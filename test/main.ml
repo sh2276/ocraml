@@ -521,6 +521,10 @@ let mat_tests =
     (* Matrix-vector multiplication tests *)
     ( "multiply 3x3 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 14.0; 32.0; 50.0 |] m3_3 v3 );
+    ( "multiply different 3x3 matrix by vector" >:: fun _ ->
+      mat_vec_prod_tester [| 5.0; 4.0; 3.0 |] m3_3_2 v3 );
+    ( "multiply different 3x3 matrix by zero vector" >:: fun _ ->
+      mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_3_2 [| 0.0; 0.0; 0.0 |]);
     ( "multiply 3x4 matrix by a 3x4 zero-vector" >:: fun _ ->
       mat_vec_prod_tester [| 0.0; 0.0; 0.0 |] m3_4 v4 );
     ( "multiply 3x4 matrix by a 3x4 non zero-vector" >:: fun _ ->
