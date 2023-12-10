@@ -214,21 +214,15 @@ let demo () =
   let page3 =
     L.tower
       [
-        image_t_layout;
-        hline width;
-        top;
-        L.tower_of_w input_button_list;
-        inference_layout;
-        hline width;
-        L.tower_of_w [ label; count; button ];
+        image_t_layout; hline width; top; L.tower_of_w input_button_list;
+        inference_layout; hline width; L.tower_of_w [ label; count; button ];
       ]
   in
 
   let tabs =
     Tabs.create ~slide:Avar.Right
       [
-        ("OCRaml Info", page1);
-        ("Training Controls", page2);
+        ("OCRaml Info", page1); ("Training Controls", page2);
         ("Run Model", page3);
       ]
   in
