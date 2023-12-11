@@ -63,4 +63,3 @@ val num_cols : t -> int
 
 val to_array : t -> float array array
 (** Convert a [Matrix] to an array of float arrays. *)
-
