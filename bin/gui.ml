@@ -1,3 +1,9 @@
+(** This is the GUI for the OCRaml application. This file is built using the
+    Bogue OCaml repository and takes inspiration from the bogue demo
+    (https://github.com/sanette/bogue-demo). There is no .mli file for this .ml
+    file because it has no interface functions and simply makes use of the other
+    OCRaml interfaces, as well as the Bogue GUI library. *)
+
 open Bogue
 module W = Widget
 module L = Layout

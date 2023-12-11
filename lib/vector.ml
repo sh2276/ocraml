@@ -1,3 +1,4 @@
+(* A vector is represented as a float array. *)
 type t = float array
 
 (* Checks if two vectors have the same length. *)
@@ -27,7 +28,8 @@ let dot_prod (v1 : t) (v2 : t) : float =
   let prod = Array.mapi (fun i x -> x *. v2.(i)) v1 in
   Array.fold_left ( +. ) 0.0 prod
 
-(* Infix operations. *)
+(* Infix operations (addition, subtraction, scalar multiplication, dot
+   product). *)
 let ( + ) = add
 let ( - ) = sub
 let ( * ) = scalar_mult
@@ -39,6 +41,7 @@ let length (v : t) = Array.length v
 (* Converts a vector to a float array. *)
 let to_array (v1 : t) = v1
 
+(*Index of the largest element in the vector.*)
 let argmax = function
   | [||] -> failwith "Empty vector"
   | arr ->

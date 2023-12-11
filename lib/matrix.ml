@@ -1,8 +1,13 @@
-type t = float array array
 (* A matrix is represented as an array of float arrays. *)
+type t = float array array
 
+(*Intialitzes a matrix from a float array array *)
 let init (m : float array array) = m
+
+(*Returns the number of rows in a matrix. *)
 let num_rows (mat : t) = Array.length mat
+
+(*Returns the number of columns in a matrix. *)
 let num_cols (mat : t) = Array.length mat.(0)
 
 (* Checks if a matrix has a number of rows equal to the length of a row
@@ -45,6 +50,7 @@ let mat_mat_prod (m1 : t) (m2 : t) =
   done;
   prod
 
+(* Add two matrices. *)
 let mat_mat_add (m1 : t) (m2 : t) =
   assert_m_m_dim_exact m1 m2;
   let r = num_rows m1 in
@@ -57,6 +63,8 @@ let mat_mat_add (m1 : t) (m2 : t) =
   done;
   sum
 
+(*Infix operators for matrix vector, matrix matrix multiplication and matrix
+  matrix addition.*)
 let ( @ ) m v = mat_vec_prod m v
 let ( * ) m1 m2 = mat_mat_prod m1 m2
 let ( + ) m1 m2 = mat_mat_add m1 m2
