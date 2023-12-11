@@ -522,6 +522,10 @@ let mat_tests =
     ( "multiply 4x2 matrix by vector" >:: fun _ ->
       mat_vec_prod_tester [| 6.0; 8.0; 8.0; 14.0 |] m4_2 [| 1.0; 2.0 |] );
     (* Matrix-matrix multiplication tests *)
+    ( "multiply two 1x1 zero matrices" >:: fun _ ->
+      mat_mat_prod_tester [| [| 0.0 |] |] [| [| 0.0 |] |] [| [| 0.0 |] |] );
+    ( "multiply two 1x1 matrices" >:: fun _ ->
+      mat_mat_prod_tester [| [| 63.0 |] |] [| [| 3.0 |] |] [| [| 21.0 |] |] );
     ( "multiply two matrices" >:: fun _ ->
       mat_mat_prod_tester
         [| [| 7.0; 3.0; 3.0 |]; [| 19.0; 6.0; 9.0 |]; [| 31.0; 9.0; 15.0 |] |]
@@ -529,7 +533,21 @@ let mat_tests =
     ( "multiply 3*4 and 4*2 matrix" >:: fun _ ->
       mat_mat_prod_tester
         [| [| 34.0; 34.0 |]; [| 90.0; 78.0 |]; [| 146.0; 122.0 |] |]
-        m3_4 m4_2 ); (* Matrix addition tests *)
+        m3_4 m4_2 );
+    ( "multiply 3x3 and 3x4 matrices" >:: fun _ ->
+      mat_mat_prod_tester
+        [|
+          [| 411.; 498.; 585.; 672. |]; [| 948.; 1152.; 1356.; 1560. |];
+          [| 1485.; 1806.; 2127.; 2448. |];
+        |]
+        [|
+          [| 32.0; 29.0; 26.0 |]; [| 77.0; 68.0; 59.0 |];
+          [| 122.0; 107.0; 92.0 |];
+        |]
+        [|
+          [| 1.0; 2.0; 3.0; 4.0 |]; [| 5.0; 6.0; 7.0; 8.0 |];
+          [| 9.0; 10.0; 11.0; 12.0 |];
+        |] ); (* Matrix addition tests *)
     ( "add 2x2 matrices" >:: fun _ ->
       mat_mat_add_tester
         [| [| 1.0; 2.0 |]; [| 3.0; 4.0 |] |]
@@ -601,6 +619,16 @@ let mat_tests =
         [|
           [| 1.0; 0.0; 0.0; 0.0 |]; [| 0.0; 1.0; 0.0; 0.0 |];
           [| 0.0; 0.0; 1.0; 0.0 |]; [| 0.0; 0.0; 0.0; 1.0 |];
+        |] );
+    ( "transpose matrix with random values" >:: fun _ ->
+      matrix_transpose_tester
+        [|
+          [| 0.237; 0.543; 0.789; 0.123 |]; [| 0.456; 0.987; 0.654; 0.231 |];
+          [| 0.876; 0.345; 0.234; 0.789 |]; [| 0.567; 0.678; 0.901; 0.432 |];
+        |]
+        [|
+          [| 0.237; 0.456; 0.876; 0.567 |]; [| 0.543; 0.987; 0.345; 0.678 |];
+          [| 0.789; 0.654; 0.234; 0.901 |]; [| 0.123; 0.231; 0.789; 0.432 |];
         |] );
     ( "transpose 4x5 matrix" >:: fun _ ->
       matrix_transpose_tester

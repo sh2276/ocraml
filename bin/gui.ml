@@ -20,7 +20,13 @@ let cur_img_dir = ref "./none.png"
 let _ =
   print_endline
     "Directory format: './[directory from ocraml base folder]/'. Make sure to \
-     include the slash after the directory."
+     include the slash after the directory. Our default training directory is \
+     ./strain/ and our default input directory is ./input/"
+
+let _ =
+  print_endline
+    "If you press enter without entering anything, these default directories \
+     will be inputted for you."
 
 let _ =
   print_endline
