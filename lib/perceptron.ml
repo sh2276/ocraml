@@ -64,6 +64,8 @@ let update_weights learning_rate inputs expected (m, b, f) =
     in
     (Matrix.(m + add_w), Vector.(b + error), f)
 
+(* [train_once rate list perceptron] will train the perceptron on a list of
+   inputs. [rate] is the training rate. *)
 let train_once rate lst perceptron =
   let rec train_aux lst acc =
     match lst with
