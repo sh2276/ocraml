@@ -21,11 +21,8 @@ let _ =
   print_endline
     "Directory format: './[directory from ocraml base folder]/'. Make sure to \
      include the slash after the directory. Our default training directory is \
-     ./strain/ and our default input directory is ./input/"
-
-let _ =
-  print_endline
-    "If you press enter without entering anything, these default directories \
+     ./strain/ and our default input directory is ./input/\n\
+     If you press enter without entering anything, these default directories \
      will be inputted for you."
 
 let _ =
@@ -149,7 +146,7 @@ let demo () =
   let input_button_list = List.map fst buttons_and_connections in
   let input_c_button_list = List.map snd buttons_and_connections in
 
-  let epoch_label = W.label "Epochs trained: 0" in
+  let epoch_label = W.label "Epochs trained: untrained" in
 
   let buttons_title = section_title "Training Controls" in
   let button_reset = W.button ~border_radius:10 "Reset Training" in

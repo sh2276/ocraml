@@ -47,6 +47,14 @@ val to_vector_list :
     [Vector], each of which represents an image loaded with a colortype and
     having the transformations applied to it *)
 
+val to_string :
+  string list ->
+  [< `Gray | `Rgb | `Rgba ] Color.t ->
+  Expr.pixel Expr.t list ->
+  string
+(* [to_string imagepaths colortype transformations] takes in a list of file
+   paths and outputs a string that shows the pixel values of all images. *)
+
 val if_names : string -> string list
 (** [if_names dir] takes in a string corresponding to a directory and outputs a
     list of files in that directory *)

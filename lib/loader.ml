@@ -39,6 +39,8 @@ let to_vector_list files colortype transformations =
   in
   List.map (fun x -> Vector.init (Array.of_list x)) vallistlist
 
+(* helper for to_string: converts a list of floats, representing pixels of an
+   image, to a string *)
 let vallist_to_stringlist (val_list : float list) =
   let rec helper val_list acc =
     match val_list with
@@ -47,9 +49,13 @@ let vallist_to_stringlist (val_list : float list) =
   in
   List.rev (helper val_list [])
 
+(* helper for to_string: converts a list of float lists (list of image
+   representations) to a list of strings representing each image*)
 let vallistlist_to_stringlistlist (val_listlist : 'a list list) =
   List.map vallist_to_stringlist val_listlist
 
+(* converts a list of file paths and outputs a string that shows the pixel
+   values of all images. *)
 let to_string files colortype transformations =
   let vlist = to_vector_list files colortype transformations in
   let out = "" in
