@@ -1,11 +1,4 @@
-# cs3110-final-project
+# OCraml
 
-Group Members/NetIDs:
 
-Sahil Hosalli/sh2276
-
-Eric Hu/elh245
-
-Farhan Naqib/fn72
-
-For usage instructions, refer to Install.md
+OCraml is an interactive OCR application, written and trained from scratch in OCaml. See `install.md` for instructions on installation and running the program. 
